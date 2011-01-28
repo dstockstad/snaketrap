@@ -1,0 +1,194 @@
+{% extends "traps/menu.html" %}
+{% block title %}
+[SnakeTrap] Traps
+{% endblock %}
+{% block options %}
+	<div id="trap_bar">
+		<p class="pagesize">
+			Results/page:
+			<a href="?pagesize=10&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">10</a>
+			<a href="?pagesize=20&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">20</a>
+			<a href="?pagesize=50&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">50</a>
+			<a href="?pagesize=100&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">100</a>
+			<a href="?pagesize=500&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">500</a>
+			<a href="?pagesize=1000&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">1000</a>
+		</p>
+	</div>
+{% endblock %}
+
+{% block content %}
+	<div id="trap_bar">
+		<p class="pagesize">
+			Results/page:
+			<a href="?pagesize=10&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">10</a>
+			<a href="?pagesize=20&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">20</a>
+			<a href="?pagesize=50&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">50</a>
+			<a href="?pagesize=100&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">100</a>
+			<a href="?pagesize=500&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">500</a>
+			<a href="?pagesize=1000&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">1000</a>
+		</p>
+	</div>
+	<div id="trapTable">
+	{% if unknown_traps %}
+		<div id="search_traptime" style="display: none">
+		<form method="GET">
+			{% csrf_token %}
+			<!-- demo 2 -->
+			<fieldset>
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="traptime|||traptime">
+				<INPUT TYPE="hidden" NAME="search_type" VALUE="gte|||lte">
+				<label for="date_from">From:</label>
+				<select name="query" id="date_from">
+					{% for day in dates %}
+						<option value="{{ day }}">{{ day }}</option>
+					{% endfor %}
+				</select>
+	
+				<label for="date_to">To:</label>
+				<select name="query" id="date_to">
+					{% for day in dates %}
+						<option value="{{ day }}">{{ day }}</option>
+					{% endfor %}
+				</select>
+ 			</fieldset>
+			<INPUT TYPE="submit">
+		</form>
+		</div>
+		<table width=100%>
+		<tr>
+		{% if user.is_staff %}
+			<th class="checkbox_width">
+				<input type="checkbox" name="Check_ctr" value="yes" onclick="javascript:CheckAll(this)">
+			</th>
+		{% endif %}
+		<th>
+			<a href=javascript:toggleDiv('search_traptime')>Traptime</a>
+			<a href="?pagesize={{ args.pagesize }}&order=traptime&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+			<a href="?pagesize={{ args.pagesize }}&order=-traptime&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		</th>
+		<th>
+			<a href=javascript:toggleDiv('search_trapoid')>TrapOID</a>
+			<a href="?pagesize={{ args.pagesize }}&order=trapoid&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+			<a href="?pagesize={{ args.pagesize }}&order=-trapoid&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+			<div style="display:none" id="search_trapoid">
+				<form name="search_trapoid" method="GET">
+					<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||trapoid">
+					<SELECT NAME="search_type">
+						<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+					</SELECT>
+					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT NAME="query">
+					<INPUT TYPE="submit">
+				</form>
+			</div>
+		</th>
+
+		<th>
+			<a href=javascript:toggleDiv('search_hostname')>Hostname</a>
+			<a href="?pagesize={{ args.pagesize }}&order=hostname&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+			<a href="?pagesize={{ args.pagesize }}&order=-hostname&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+			<div style="display:none" id="search_hostname">
+				<form name="search_hostname" method="GET">
+					<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||hostname">
+					<SELECT NAME="search_type">
+						<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+					</SELECT>
+					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT NAME="query">
+					<INPUT TYPE="submit">
+				</form>
+			</div>
+		</th>
+
+		<th class="message_width">
+			<a href=javascript:toggleDiv('search_formatline')>Message</a>
+			<a href="?pagesize={{ args.pagesize }}&order=formatline&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+			<a href="?pagesize={{ args.pagesize }}&order=-formatline&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+			<div style="display:none" id="search_formatline">
+				<form name="search_formatline" method="GET">
+					<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||formatline">
+					<SELECT NAME="search_type">
+						<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+					</SELECT>
+					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT NAME="query">
+					<INPUT TYPE="submit">
+				</form>
+			</div>
+		</th>
+		</tr>
+		<FORM METHOD="post" ACTION="{{ URL_PREFIX }}/remove_unknown_traps/">
+		{% csrf_token %}
+		{% for unknown_trap in unknown_traps.object_list %}
+			<tr>
+			{% if user.is_staff %}
+				<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_objects" type="checkbox" value="{{ unknown_trap }}"></td>
+			{% endif %}
+			<td class="status{% cycle 'Odd' 'Even' %}">{{ unknown_trap.traptime }}</td>
+			<td class="status{% cycle 'Odd' 'Even' %}">
+				<a href=javascript:toggleDiv('{{ unknown_trap }}_{{ unknown_trap.trapoid }}')>{{ unknown_trap.trapoid }}</a>
+				<div style="display:none" id="{{ unknown_trap }}_{{ unknown_trap.trapoid }}">
+					<br />
+					<b><a href="?search_column={{ args.search_column }}|||trapoid&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ unknown_trap.trapoid }}">Add to search</a></b><br />
+					<b><a href="?search_column={{ args.search_column }}|||trapoid&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ unknown_trap.trapoid }}">Remove from search</a></b><br />
+					<b><a href="?search_column=,trapoid&search_type=,eq&query=,{{ unknown_trap.trapoid }}">Search</a></b><br />
+				</div>
+			</td>
+			<td class="status{% cycle 'Odd' 'Even' %}">
+				<a href=javascript:toggleDiv('{{ unknown_trap }}_{{ unknown_trap.hostname }}')>{{ unknown_trap.hostname }}</a>
+				<div style="display:none" id="{{ unknown_trap }}_{{ unknown_trap.hostname }}">
+					<br />
+					<b><a href="?search_column={{ args.search_column }}|||hostname&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ unknown_trap.hostname }}">Add to search</a></b><br />
+					<b><a href="?search_column={{ args.search_column }}|||hostname&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ unknown_trap.hostname }}">Remove from search</a></b><br />
+					<b><a href="?search_column=,hostname&search_type=,eq&query=,{{ unknown_trap.hostname }}">Search</a></b><br />
+				</div>
+			</td>
+			<td width="35%" class="status{% cycle 'Odd' 'Even' %}">{{ unknown_trap.formatline }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+		<INPUT TYPE="submit" VALUE="Delete">
+		</form>
+		</div>
+	{% endif %}
+	{% if unknown_traps %}
+		</div>
+		<div id="pagination">
+			<table>
+			<td class="left">
+				{% if unknown_traps.has_previous %}
+					<a href="?page={{ unknown_traps.previous_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">previous</a>
+				{% endif %}
+			</td>
+			<td class="middle">
+				Page {{ unknown_traps.number }} of {{ unknown_traps.paginator.num_pages }}.
+			</td>
+			<td class="right">
+				{% if unknown_traps.has_next %}
+					<a href="?page={{ unknown_traps.next_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">next</a>
+				{% endif %}
+			</td>
+			</table>
+	{% endif %}
+{% endblock %}

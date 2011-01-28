@@ -1,0 +1,25 @@
+{% load filters %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<LINK HREF="{{ MEDIA_URL }}/css/snaketrap.css" REL="stylesheet" TYPE="text/css">
+<link rel="icon" href="{{ MEDIA_URL }}/images/favicon.png" type="image/png" />
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META http-equiv="Content-Type" content="application/xhtml; charset=utf-8" />
+</head>
+<body>
+<h1><a href="{{ URL_PREFIX }}/traps/"><img src="{{ MEDIA_URL }}/images/snaketrap_logo.png" /></a></h1>
+<div id="menu">
+	{% block menu %}{% endblock %}
+</div>
+<div id="options">
+	{% block options %}{% endblock %}
+</div>
+<br />
+<div id="login_content">
+	{% block content %}{% endblock %}
+</div>
+</body>
+</html>
+

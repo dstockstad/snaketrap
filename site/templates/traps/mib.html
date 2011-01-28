@@ -1,0 +1,50 @@
+{% extends "traps/menu.html" %}
+{% block title %}
+[SnakeTrap] Mibs
+{% endblock %}
+{% block content %}
+	<form method="POST" name="file" enctype="multipart/form-data" action="upload">
+	<div id="upload_mib">
+	{% csrf_token %}
+	<table>
+		<tr>
+			<td>		
+				{{ form }}
+				<p>
+				<input type="submit" value="Upload">
+				</p>
+			</td>
+		</tr>
+	</table>
+	</div>
+	</form>
+	<div id="mibTable">
+	{% if mibs %}
+		<form name="modify_lines" method="POST">
+		<table>
+		<tr>
+		<th class="checkbox_width">
+			<input type="checkbox" name="Check_ctr" value="yes" onclick="javascript:CheckAll(this)">
+		</th>
+		<th>MIB</th>
+		</tr>
+		{% for mib in mibs %}
+			<tr>
+			<td class="status{% cycle 'Odd' 'Even' %}"><input name="modify_line" type="checkbox" value="{{ mib }}"></td>
+			<td class="status{% cycle 'Odd' 'Even' %}">{{ mib }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+		<p>
+		{% csrf_token %}
+		<select name="action">
+			<option value="delete" selected>Delete Selected MIBs</option>
+			<option value="delete_and_remove_oids">Delete selected MIB and their OIDs</option>
+			<option value="readd">Readd Selected MIBs</option>
+		</select>
+		<input type="submit">
+		</form>
+		</p>
+	{% endif %}
+	</div>
+{% endblock %}

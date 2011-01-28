@@ -1,0 +1,14 @@
+{% extends "traps/menu.html" %}
+{% load filters %}
+{% block title %}
+[SnakeTrap] An error occured
+{% endblock %}
+{% block options %}
+{% endblock %}
+
+{% block content %}
+	<div id="error">
+		<h2>{{ custom_errors.object }}</h2>
+		<h3>{{ custom_errors.custom_error_type }}</h3>
+	</div>
+{% endblock %}

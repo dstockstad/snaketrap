@@ -1,0 +1,32 @@
+<div align="center">
+{% extends "registration/base.html" %}
+
+{% block content %}
+	{% if form.errors %}
+		<p>Your username and password didn't match. Please try again.</p>
+	{% endif %}
+
+	<form method="post" action="{% url django.contrib.auth.views.login %}">
+		{% csrf_token %}
+		<table border="0" cellpadding=5>
+			<tr>
+				<td class=loginform>Username:</td>
+				<td align=left>
+					<input type="text" size=40 name="username" />
+				</td>
+			</tr>
+			<tr>
+				<td class=loginform>Password:</td>
+				<td align=left>
+					<input type="password" size=40 name="password" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input name="login" type="submit" value="Login" class=btn>
+				</td>
+			</tr>
+		</table>
+			<input class="button" type="hidden" name="next" value="{{ next }}" />
+		</form>
+{% endblock %}

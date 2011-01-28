@@ -1,0 +1,29 @@
+{% extends "traps/menu.html" %}
+{% block title %}
+[SnakeTrap] {{ title }}
+{% endblock %}
+{% block options %}
+{% endblock %}
+{% block content %}
+	<div id="mass_change">
+	<h2>You are about to {{ title|lower }} on the following objects:</h2><br/>
+	<div id="mass_change_form">
+		<form name="modify_lines" action="{{ URL_PREFIX }}/snmptt_def_mass_change_commit" method="POST">
+			<input type="hidden" name="select_across" value="0">
+			<input type="hidden" name="index" value="0">
+			<input type="hidden" name="action" value="{{ action }}">
+			<div id="mass_change_form_objects">
+			{% for selected in selected_objects %}
+				<input type="hidden" name="selected_oids" value="{{ selected }}">
+				<li>{{ selected }}</li>
+			{% endfor %}
+			</div>
+			{% csrf_token %}
+			<br />{{ form.as_p }}<br />
+			{{ help }}
+			<h2>Are you sure you wish to continue?</h2>
+			<input type="submit" value="Yes">
+		</form>
+	</div>
+	</div>
+{% endblock %}

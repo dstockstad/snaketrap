@@ -1,0 +1,54 @@
+{% load filters %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="icon" href="{{ MEDIA_URL }}/images/favicon.png" type="image/png" />
+<LINK HREF="{{ MEDIA_URL }}/css/redmond/jquery-ui-1.7.1.custom.css" REL="stylesheet" TYPE="text/css">
+<LINK HREF="{{ MEDIA_URL }}/css/slider.css" REL="stylesheet" TYPE="text/css">
+<LINK HREF="{{ MEDIA_URL }}/css/snaketrap.css" REL="stylesheet" TYPE="text/css">
+<!--[if lte IE 8]>
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/ie.css" />
+<![endif]-->
+
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META http-equiv="Content-Type" content="application/xhtml; charset=utf-8" />
+
+<script type="text/javascript" src="{{ MEDIA_URL }}/js/script.js"></script>
+{% if jquery == 'True' %}
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery-ui.min.js"></script>
+{% endif %}
+
+{% if jquery_slider == 'True' %}
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/selectToUISlider.jQuery.js"></script>
+
+	<script type="text/javascript">
+		$(function(){
+			//demo 2
+			$('select#date_from, select#date_to').selectToUISlider();
+			
+		});
+	</script>
+{% endif %}
+
+</head>
+<body>
+<div id="top">
+	<div id="logo">
+		<a href="{{ URL_PREFIX }}/about/"><img src="{{ MEDIA_URL }}/images/snaketrap_logo.png" /></a>
+	</div>
+	<div id="menu">
+		{% block menu %}{% endblock %}
+	</div>
+	<div id="user">
+		Logged in as: {{ user }}
+		<a href="{{ URL_PREFIX }}/logout">Logout</a>
+	</div>
+</div>
+<div id="content">
+	{% block content %}{% endblock %}
+</div>
+</body>
+</html>
+

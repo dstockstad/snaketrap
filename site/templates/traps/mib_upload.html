@@ -1,0 +1,48 @@
+{% extends "traps/menu.html" %}
+{% block title %}
+[SnakeTrap] Mibs
+{% endblock %}
+{% block options %}
+{% endblock %}
+{% block content %}
+	{% if file %}
+		<div id="uploaded_mib">
+		<h1>{{ file }} successfully uploaded</h2>
+		<p class="import_errors">
+		<h2><a href="javascript:toggleDiv('import_errors');">View Import Errors:</a></h2>
+		<div id="import_errors" style="display: none">
+		<h3>
+		{% for error in errors %}
+			{{ error }}<br />
+		{% endfor %}
+		</h3>
+		</div>
+		</p>
+
+
+		<p class="import_info">
+		<h2><a href="javascript:toggleDiv('import_info');">View Import Info:</a></h2>
+		<div id="import_info" style="display: none">
+		<h3>
+		{% for out in output %}
+			{{ out }}<br />
+		{% endfor %}
+		</h3>
+		</div>
+		</p>
+
+		<p class="import_summary">
+		<h2>Summary:</h2>
+		<div id="import_summary">
+		<h3>
+		{% for sum in summary %}
+			{{ sum }}<br />
+		{% endfor %}
+		</h3>
+		</div>
+		</p>
+		</div>
+	{% else %}
+		<p>No file was uploaded.</p>
+	{% endif %}
+{% endblock %}

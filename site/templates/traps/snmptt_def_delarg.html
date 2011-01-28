@@ -1,0 +1,17 @@
+{% extends "traps/menu.html" %}
+{% block title %}
+[SnakeTrap] {{ title }}
+{% endblock %}
+{% block options %}
+{% endblock %}
+{% block content %}
+	<div id="mass_change">
+	The following objects were selected:
+	{% for selected in selected_objects %}
+		<input type="hidden" name="modify_line" value="{{ selected }}">		
+		<li>{{ selected }}</li>
+	{% endfor %}
+	{% csrf_token %}
+	{{ form }}
+	</div>
+{% endblock %}
