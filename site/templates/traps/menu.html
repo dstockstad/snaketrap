@@ -7,14 +7,16 @@
 	<table class="menu_small">
 	{% endif %}
 		<tr>
-		<th class="menu_traps"><a href="{{ URL_PREFIX }}/traps/">Traps</a></th>
-		<th class="menu_unknown_traps"><a href="{{ URL_PREFIX }}/unknown_traps/">Unknown Traps</a></th>
+		<th class="menu_traps"><a href="{% url traps.views.trap_listing %}">Traps</a></th>
 		{% if user.is_staff %}
-			<th class="menu_snmptt_def"><a href="{{ URL_PREFIX }}/snmptt_def/">SNMP Definitions</a></th>
-			<th class="menu_mibs"><a href="{{ URL_PREFIX }}/mibs/">MIBs</a></th>
-			<th class="menu_administration"><a href="{{ URL_PREFIX }}/admin/">Administration</a></th>
+			<th class="menu_unknown_traps"><a href="{% url traps.views.unknown_trap_listing %}">Unknown Traps</a></th>
+			<th class="menu_snmptt_def"><a href="{% url traps.views.snmptt_def_listing %}">SNMP Definitions</a></th>
+			<th class="menu_mibs"><a href="{% url traps.views.mib_listing %}">MIBs</a></th>
+			<th class="menu_administration"><a href="{% url admin:index %}">Administration</a></th>
 		{% endif %}
 		</tr>
 	</table>
+
+
 {% endblock %}
 

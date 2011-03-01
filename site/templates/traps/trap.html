@@ -18,9 +18,8 @@
 	</div>
 	<div id="trapTable">
 	{% if traps %}
-		<div id="search_traptime" style="display: none">
+		<div id="search_time" style="display: none">
 		<form method="GET">
-			{% csrf_token %}
 			<!-- demo 2 -->
 			<fieldset>
 				<INPUT TYPE="hidden" NAME="search_column" VALUE="traptime|||traptime">
@@ -28,14 +27,14 @@
 				<label for="date_from">From:</label>
 				<select name="query" id="date_from">
 					{% for day in dates %}
-						<option value="{{ day }}">{{ day }}</option>
+						<option value="{{ day }} 00:00:00">{{ day }}</option>
 					{% endfor %}
 				</select>
 	
 				<label for="date_to">To:</label>
 				<select name="query" id="date_to">
 					{% for day in dates %}
-						<option value="{{ day }}">{{ day }}</option>
+						<option value="{{ day }} 23:59:59">{{ day }}</option>
 					{% endfor %}
 				</select>
  			</fieldset>
@@ -50,7 +49,7 @@
 			</th>
 		{% endif %}
 		<th>
-			<a href=javascript:toggleDiv('search_traptime')>Traptime</a>
+			<a href=javascript:toggleDiv('search_time')>Traptime</a>
 			<a href="?pagesize={{ args.pagesize }}&order=traptime&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
 			<a href="?pagesize={{ args.pagesize }}&order=-traptime&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
 		</th>
@@ -72,6 +71,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -95,6 +95,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -119,6 +120,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -143,6 +145,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -167,6 +170,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -191,13 +195,14 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
 			</div>
 		</th>
 		</tr>
-		<FORM METHOD="post" ACTION="{{ URL_PREFIX }}/remove_traps/">
+		<FORM METHOD="post" ACTION="{% url traps.views.trap_remove %}">
 		{% csrf_token %}
 		{% for trap in traps.object_list %}
 			<tr>
@@ -209,27 +214,27 @@
 				<a href=javascript:toggleDiv('{{ trap }}_{{ trap.eventname }}')>{{ trap.eventname }}</a>
 				<div style="display:none" id="{{ trap }}_{{ trap.eventname }}">
 					<br />
-					<b><a href="?search_column={{ args.search_column }}|||eventname&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.eventname }}">Add to search</a></b><br />
-					<b><a href="?search_column={{ args.search_column }}|||eventname&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.eventname }}">Remove from search</a></b><br />
-					<b><a href="?search_column=|||eventname&search_type=|||eq&query=|||{{ trap.eventname }}">Search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||eventname&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.eventname }}">Add to search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||eventname&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.eventname }}">Remove from search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column=|||eventname&search_type=|||eq&query=|||{{ trap.eventname }}">Search</a></b><br />
 				</div>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">
 				<a href=javascript:toggleDiv('{{ trap }}_{{ trap.trapoid }}')>{{ trap.trapoid }}</a>
 				<div style="display:none" id="{{ trap }}_{{ trap.trapoid }}">
 					<br />
-					<b><a href="?search_column={{ args.search_column }}|||trapoid&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.trapoid }}">Add to search</a></b><br />
-					<b><a href="?search_column={{ args.search_column }}|||trapoid&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.trapoid }}">Remove from search</a></b><br />
-					<b><a href="?search_column=|||trapoid&search_type=|||eq&query=|||{{ trap.trapoid }}">Search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||trapoid&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.trapoid }}">Add to search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||trapoid&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.trapoid }}">Remove from search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column=|||trapoid&search_type=|||eq&query=|||{{ trap.trapoid }}">Search</a></b><br />
 				</div>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">
 				<a href=javascript:toggleDiv('{{ trap }}_{{ trap.hostname }}')>{{ trap.hostname }}</a>
 				<div style="display:none" id="{{ trap }}_{{ trap.hostname }}">
 					<br />
-					<b><a href="?search_column={{ args.search_column }}|||hostname&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.hostname }}">Add to search</a></b><br />
-					<b><a href="?search_column={{ args.search_column }}|||hostname&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.hostname }}">Remove from search</a></b><br />
-					<b><a href="?search_column=|||hostname&search_type=|||eq&query=|||{{ trap.hostname }}">Search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||hostname&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.hostname }}">Add to search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||hostname&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.hostname }}">Remove from search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column=|||hostname&search_type=|||eq&query=|||{{ trap.hostname }}">Search</a></b><br />
 				</div>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">{{ trap.category }}</td>
@@ -237,9 +242,9 @@
 				<a href=javascript:toggleDiv('{{ trap }}_{{ trap.severity }}')>{{ trap.severity }}</a>
 				<div style="display:none" id="{{ trap }}_{{ trap.severity }}">
 					<br />
-					<b><a href="?search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.severity }}">Add to search</a></b><br />
-					<b><a href="?search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.severity }}">Remove from search</a></b><br />
-					<b><a href="?search_column=|||severity&search_type=|||eq&query=|||{{ trap.severity }}">Search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ trap.severity }}">Add to search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ trap.severity }}">Remove from search</a></b><br />
+					<b><a href="?order={{ args.order }}&pagesize={{ args.pagesize }}&search_column=|||severity&search_type=|||eq&query=|||{{ trap.severity }}">Search</a></b><br />
 				</div>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">

@@ -15,9 +15,10 @@ You should have received a copy of the GNU General Public License
 along with SnakeTrap.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator, MinLengthValidator
 from django.db import models
 from django.contrib.auth.models import User
+from traps.models import *
 
 PERMISSION_COLUMN_CHOICES = (
     ('severity', 'Severity'),
@@ -62,14 +63,28 @@ class Unknown_trap(models.Model):
 		db_table = 'snmptt_unknown'
 
 class Action(models.Model):
-	action_name = models.CharField(max_length=512, primary_key=True)
-	commandline = models.CharField(max_length=512, validators=[RegexValidator(r'^[-\w\$\.\ ]+$', message='This field can only contain upper/lowercase characters, spaces, numbers, dots, hyphens and dollar signs')])
-	help = models.CharField(max_length=512, null=True, blank=True)
+	action_name = models.CharField(max_length=512, primary_key=True, help_text="The human readable name of the action. Must be unique")
+	commandline = models.CharField(max_length=512, validators=[RegexValidator(r'^[-\w\$\.\ ]+$', message='This field can only contain upper/lowercase characters, spaces, numbers, dots, hyphens and dollar signs')], help_text="The command that will be executed plus argument definitions. $ARG1$ will be translated to the first argument in the SNMPTT definition")
+	help = models.CharField(max_length=512, null=True, blank=True, help_text="This help will be displayed on a few pages to help knowing what arguments this action needs")
 
 	def __unicode__(self):
 		return(str(self.action_name))
 	class Meta:
 		db_table = 'actions'
+
+class Argument(models.Model):
+	oid = models.ForeignKey('Snmptt_def', db_column='oid')
+	argument_nr = models.SmallIntegerField(validators=[MinValueValidator(1)])
+	argument = models.CharField(max_length=512, validators=[MinLengthValidator(1), RegexValidator(r'^[-\w\$\.\ \*\@\"]+$', message='This field can only contain upper/lowercase characters, @, ", spaces, numbers, dots, hyphens and dollar signs')])
+
+	def __unicode__(self):
+		return(str(self.id))
+	def snmptt_def_oid(self):
+		return(str(Snmptt_def.oid))
+	class Meta:
+		db_table = 'snmptt_def_action_args'
+		unique_together = ('oid','argument_nr')
+		ordering = ('argument_nr','oid')
 
 class Snmptt_def(models.Model):
 	oid = models.CharField(max_length=128, primary_key=True)
@@ -87,24 +102,10 @@ class Snmptt_def(models.Model):
 		db_table = 'snmptt_def'
 		verbose_name = 'SNMPTT Definition'
 
-class Argument(models.Model):
-	oid = models.ForeignKey('Snmptt_def', db_column='oid')
-	argument_nr = models.SmallIntegerField()
-	argument = models.CharField(max_length=512, validators=[RegexValidator(r'^[-\w\$\.\ \*\@\"]+$', message='This field can only contain upper/lowercase characters, @, ", spaces, numbers, dots, hyphens and dollar signs')])
-
-	def __unicode__(self):
-		return(str(self.id))
-	def snmptt_def_oid(self):
-		return(str(Snmptt_def.oid))
-	class Meta:
-		db_table = 'snmptt_def_action_args'
-		unique_together = ('oid','argument_nr')
-		ordering = ('argument_nr','oid')
-
 class RegexPermission(models.Model):
-	user = models.ForeignKey(User)
-	column = models.CharField(max_length=128, choices=PERMISSION_COLUMN_CHOICES)
-	regex = models.CharField(max_length=512)
+	user = models.ForeignKey(User, help_text="The user for which the permission will apply")
+	column = models.CharField(max_length=128, choices=PERMISSION_COLUMN_CHOICES, help_text="The column in the view that the Regular Expression will apply to, for example Severity")
+	regex = models.CharField(max_length=512, help_text="Regular Expression, for example CRITICAL will match text containing that word")
 
 	def __unicode__(self):
 		return self.regex

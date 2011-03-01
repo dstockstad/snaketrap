@@ -49,5 +49,5 @@ urlpatterns = patterns('',
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^logout/$', 'traps.views.logout_view'),
-    (r'^admin/(.*)', admin.site.root),
+    (r'^admin/', admin.site.urls),
 )

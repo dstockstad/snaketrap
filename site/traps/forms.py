@@ -17,14 +17,16 @@ along with SnakeTrap.  If not, see <http://www.gnu.org/licenses/>.
 
 # Forms
 from django import forms
+from django.forms import ModelForm
 from traps.models import *
 
 class UploadFileForm(forms.Form):
 	file = forms.FileField()
 
-class ChangeArgumentForm(forms.Form):
-	argument_nr = forms.IntegerField()
-	argument = forms.CharField(max_length=256)
+class ChangeArgumentForm(ModelForm):
+	class Meta:
+		model = Argument
+		exclude = ('oid',)
 
 class DeleteArgumentForm(forms.Form):
 	argument_nr = forms.IntegerField()

@@ -20,10 +20,12 @@ from django.contrib import admin
 from django import forms
 from piston.models import *
 
-class ArgumentInline(admin.StackedInline):
+class ArgumentInline(admin.TabularInline):
 	model = Argument
 	extra = 0
 class Snmptt_defAdmin(admin.ModelAdmin):
+	readonly_fields = ['oid','severity','oid_name','event_type','format','description']
+	ordering = ['oid','severity','oid_name','event_type','format','description','action_name']
 	list_display = ('__unicode__','oid','oid_name','severity')
 	search_fields = ['oid','severity']
 	inlines = [ArgumentInline]
@@ -31,7 +33,6 @@ class Snmptt_defAdmin(admin.ModelAdmin):
 class ActionAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__','commandline')
 	search_fields = ['action_name','commandline']
-
 class PermissionAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__','user','column','regex')
 

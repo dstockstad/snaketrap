@@ -32,6 +32,10 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from django.template.defaultfilters import stringfilter
 
+# Memcache
+# from django.views.decorators.cache import cache_page
+# from django.core.cache import cache
+
 # Custom classes
 from traps.validation import *
 from traps.error_handling import *
@@ -95,7 +99,7 @@ def check_dirs(dirs, request):
 			return CErr
 	return(None)
 
-def f_paginator(list, pagesize, page):
+def f_paginator(request, list, pagesize, page):
 	# Split up query into pages
 	paginator = Paginator(list, int(pagesize))
 
@@ -106,13 +110,24 @@ def f_paginator(list, pagesize, page):
 		traps = paginator.page(paginator.num_pages)
 	return(traps)
 
-def list_dates(first_year, last_year):
+
+def list_dates(start_year=2011, start_month=1, start_day=1, last_year=2011, last_month=2, last_day=26):
 	date_list = []
-	for year in range(first_year, last_year):
-		for month in range(1, 13):
-			if len(str(month)) == 1:
-				month = '0' + str(month)
-			date_list.append(str(year) + "-" + str(month) + "-01")
+
+	begin_year = datetime.date(start_year, start_month, start_day)
+	end_year = datetime.date(last_year, last_month, last_day)
+	one_day = datetime.timedelta(days=1)
+
+	next_day = begin_year
+	if start_year == last_year:
+		last_year = last_year + 1
+
+	for year in range(start_year, last_year):
+		for day in range(0, 366):  # includes potential leap year
+			if next_day > end_year:
+				break
+			date_list.append("".join(next_day.isoformat().split("-")))
+			next_day += one_day
 
 	return(date_list)
 
@@ -190,6 +205,11 @@ def trap_listing(request):
 	except:
 		page = 1
 
+	if args.pagesize > 3000:
+		CErr = CustomError()
+		CErr.object, CErr.custom_error_type = 'Screwing Around Error', 'Stop messing with my system or suffer my wrath!!!'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
 	# Get all objects and order by args.order
 	trap_list = Trap.objects.all().order_by(str(args.order))
 
@@ -197,23 +217,23 @@ def trap_listing(request):
 	trap_list = perms.filterResult(trap_list)
 
 	# Apply search
-	trap_list = Search.f_search(trap_list, args.search_column, args.search_type, args.query)
+	trap_list = Search.f_search(trap_list, args)
 
 	# Get time of first and last result
 	try:
 		first_trap = Trap.objects.all().order_by('traptime')[0]
 		last_trap = Trap.objects.all().order_by('-traptime')[0]
-		first_trap_time = first_trap.traptime.year
-		last_trap_time = last_trap.traptime.year + 1
+		first_trap_year, first_trap_month, first_trap_day = first_trap.traptime.year, first_trap.traptime.month, first_trap.traptime.day
+		last_trap_year, last_trap_month, last_trap_day = last_trap.traptime.year, last_trap.traptime.month, last_trap.traptime.day
 	except:
-		first_trap_time = datetime.datetime.now().year
-		last_trap_time = datetime.datetime.now().year + 1
+		first_trap_year, first_trap_month, first_trap_day = datetime.datetime.now().year - 1, datetime.datetime.now().month, datetime.datetime.now().day
+		last_trap_year, last_trap_month, last_trap_day = datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day
 
 	# Get dates for date slider
-	date_list = list_dates(first_trap_time, last_trap_time)
+	date_list = list_dates(first_trap_year, first_trap_month, first_trap_day, last_trap_year, last_trap_month, last_trap_day)
 
 	# Apply pagination
-	traps = f_paginator(trap_list, args.pagesize, page)
+	traps = f_paginator(request, trap_list, args.pagesize, page)
 
 	# Send result to template
 	return render_to_response('traps/trap.html', {"traps": traps, "args": args, "permissions": perms, "dates": date_list, "jquery": "True", "jquery_slider": "True" }, context_instance=RequestContext(request))
@@ -235,6 +255,14 @@ def trap_remove(request):
 
 @login_required
 def unknown_trap_listing(request):
+	CErr = CustomError()
+	Search = CustomSearch()
+
+	if request.user.is_staff == False:
+		CErr.object = 'Permission Error'
+		CErr.custom_error_type = 'You must be staff to view this page'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
 	# Get all arguments
 	args = Arguments()
 
@@ -271,30 +299,33 @@ def unknown_trap_listing(request):
 	except:
 		page = 1
 
+	if args.pagesize > 3000:
+		CErr = CustomError()
+		CErr.object, CErr.custom_error_type = 'Screwing Around Error', 'Stop messing with my system or suffer my wrath!!!'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
 	# Get all objects and order by args.order
 	unknown_trap_list = Unknown_trap.objects.all().order_by(str(args.order))
 
-	# Apply permissions
-	# trap_list = perms.filterResult(trap_list)
-
 	# Apply search
-	unknown_trap_list = Search.f_search(unknown_trap_list, args.search_column, args.search_type, args.query)
+	unknown_trap_list = Search.f_search(unknown_trap_list, args)
 
 	# Get time of first and last result
 	try:
 		first_trap = Unknown_trap.objects.all().order_by('traptime')[0]
 		last_trap = Unknown_trap.objects.all().order_by('-traptime')[0]
-		first_trap_time = first_trap.traptime.year
-		last_trap_time = last_trap.traptime.year + 1
+		first_trap_year, first_trap_month, first_trap_day = first_trap.traptime.year, first_trap.traptime.month, first_trap.traptime.day
+		last_trap_year, last_trap_month, last_trap_day = last_trap.traptime.year, last_trap.traptime.month, last_trap.traptime.day
 	except:
-		first_trap_time = datetime.datetime.now().year
-		last_trap_time = datetime.datetime.now().year + 1
+		first_trap_year, first_trap_month, first_trap_day = datetime.datetime.now().year - 1, datetime.datetime.now().month, datetime.datetime.now().day
+		last_trap_year, last_trap_month, last_trap_day = datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day
 
 	# Get dates for date slider
-	date_list = list_dates(first_trap_time, last_trap_time)
+	date_list = list_dates(first_trap_year, first_trap_month, first_trap_day, last_trap_year, last_trap_month, last_trap_day)
+
 
 	# Apply pagination
-	unknown_traps = f_paginator(unknown_trap_list, args.pagesize, page)
+	unknown_traps = f_paginator(request, unknown_trap_list, args.pagesize, page)
 
 	# Send result to template
 	return render_to_response('traps/unknown_trap.html', {"unknown_traps": unknown_traps, "args": args, "dates": date_list, "jquery": "True", "jquery_slider": "True" }, context_instance=RequestContext(request))
@@ -329,14 +360,14 @@ def snmptt_def_listing(request):
 	args.search_column = str(request.GET.get('search_column', ''))
 	args.search_type = str(request.GET.get('search_type', ''))
 	args.query = request.GET.getlist('query')
-	if len(args.query) == len(args.search_type.split(",")):
-		args.query = ",".join(args.query)
+	if len(args.query) == len(args.search_type.split("|||")):
+		args.query = "|||".join(args.query)
 	else:
 		if len(args.query) > 0:
 			fquery = ''
 			for query in args.query:
 				if fquery != '':
-					fquery = fquery + "," + str(query)
+					fquery = fquery + "|||" + str(query)
 				else:
 					fquery = str(query)
 			args.query = fquery
@@ -355,23 +386,29 @@ def snmptt_def_listing(request):
 	except:
 		page = 1
 
+	if args.pagesize > 3000:
+		CErr = CustomError()
+		CErr.object, CErr.custom_error_type = 'Screwing Around Error', 'Stop messing with my system or suffer my wrath!!!'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
 	# Get all objects and order by args.order
-	snmptt_def_list = Snmptt_def.objects.all().order_by(str(args.order))
-	snmptt_def_list = Search.f_search(snmptt_def_list, args.search_column, args.search_type, args.query)
-	snmptt_defs = f_paginator(snmptt_def_list, args.pagesize, page)
+	snmptt_def_list = Snmptt_def.objects.select_related().all().order_by(str(args.order))
+	snmptt_def_list = Search.f_search(snmptt_def_list, args)
+	snmptt_defs = f_paginator(request, snmptt_def_list, args.pagesize, page)
+
 
 	# Get time of first and last result
 	try:
 		first_trap = Snmptt_def.objects.all().order_by('date_added')[0]
 		last_trap = Snmptt_def.objects.all().order_by('-date_added')[0]
-		first_trap_time = first_trap.date_added.year
-		last_trap_time = last_trap.date_added.year + 1
+		first_trap_year, first_trap_month, first_trap_day = first_trap.date_added.year, first_trap.date_added.month, first_trap.date_added.day
+		last_trap_year, last_trap_month, last_trap_day = last_trap.date_added.year, last_trap.date_added.month, last_trap.date_added.day
 	except:
-		first_trap_time = datetime.datetime.now().year - 4
-		last_trap_time = datetime.datetime.now().year + 1
+		first_trap_year, first_trap_month, first_trap_day = datetime.datetime.now().year - 1, datetime.datetime.now().month, datetime.datetime.now().day
+		last_trap_year, last_trap_month, last_trap_day = datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day
 
 	# Get dates for date slider
-	date_list = list_dates(first_trap_time, last_trap_time)
+	date_list = list_dates(first_trap_year, first_trap_month, first_trap_day, last_trap_year, last_trap_month, last_trap_day)
 
 	# Send result to template
 	return render_to_response('traps/snmptt_def.html', {"snmptt_defs": snmptt_defs, "args": args, "dates": date_list, "jquery": "True", "jquery_slider": "True" }, context_instance=RequestContext(request))
@@ -467,19 +504,19 @@ def snmptt_def_mass_change_commit(request):
 		output = 'You have successfully deleted the action and arguments on:'
 			
 	elif action == 'change_argument':
-		try:
-			argument_nr = int(request.POST.get('argument_nr',0))
-		except ValueError:
-			argument_nr = 0
-		argument = request.POST.get('argument', '')
-
-		if argument_nr == 0 or len(argument) == 0:
+		a = Argument()
+		form = ChangeArgumentForm(request.POST, instance=a)
+		if form.is_valid() == False:
 			CErr = CustomError()
-			CErr.object = 'Selection Error'
-			CErr.custom_error_type = 'Invalid argument'
+			CErr.object = 'Form Validation Error'
+			CErr.custom_error_type = 'Invalid argument_nr or argument'
 			return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
 
+		data = request.POST.copy()
+
 		for oid in oids:
+			argument_nr = request.POST.get('argument_nr', '')
+			argument = request.POST.get('argument', '')
 			defset = Snmptt_def.objects.get(oid=str(oid))
 			try:
 				b = Argument.objects.get(oid=defset, argument_nr=argument_nr)

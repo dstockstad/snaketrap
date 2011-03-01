@@ -8,10 +8,19 @@ A web server (install script assumes Apache)
 mod_wsgi
 Python (tested with 2.4, 2.6 and 2.7)
 Django (tested with version 1.2.3 and 1.2.4)
-django-piston
+django-piston (the experimental api is based on piston)
 A database (install script assumes PostgreSQL)
 psycopg2 (for python postgresql support)
 Net-SNMP
+
+PostgreSQL notes:
+8.1 seems to be quite slow, 8.4 is much better.
+
+Apache notes:
+Apache can hang if mod_python is loaded at the same time as mod_wsgi. Therefor, make sure mod_python is not loaded if it is installed.
+
+General notes:
+An easy way to install the python requirements is by using easy_install or pip. 
 
 How to install:
 IMPORTANT!!! DO NOT CREATE A DATABASE WHEN INSTALLING SNMPTT. THE INSTALL SCRIPT FOR SNAKETRAP WILL TAKE CARE OF THAT!
@@ -25,6 +34,7 @@ If you forgot your settings, they can be found in <site_dir>/settings.py (defaul
 Troubleshooting:
 Make sure you've configured snmptt correctly, check your system logs if something is not working correctly or no traps are received. 
 Also make sure that snmptrapd is running correctly.
+Obviously you need to make sure that some device is configured to send snmp traps to you :)
 SnakeTrap errors will be logged to your web server logs so be sure to check them for any information.
 You can turn on Django debugging by setting DEBUG = True in settings.py (not recommended for production)
 If you're running SELinux, be sure to check if there are any denials and fix them. Not a lot of testing has been done with SELinux

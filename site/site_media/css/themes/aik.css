@@ -1,0 +1,60 @@
+/* This file is part of SnakeTrap.
+
+SnakeTrap is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SnakeTrap is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SnakeTrap.  If not, see <http://www.gnu.org/licenses/>. */
+
+#content {
+	background-color: #f4ff03;
+}
+#user {
+	background-color: #f4ff03;
+}
+#trap_bar {
+	background-color: #f4ff03;
+}
+#def_bar TD {
+	background-color: #f4ff03;
+}
+#trapTable {
+	background-color: #f4ff03;
+}
+#defTable {
+	background-color: #f4ff03;
+}
+#mass_change_form_objects {
+	background-color: red;
+}
+#mass_change {
+	background-color: #f4ff03;
+}
+#mibTable {
+	background-color: #f4ff03;
+}
+#upload_mib {
+	background-color: #f4ff03;
+}
+#upload_mib P {
+	background-color: #f4ff03;
+}
+#upload_mib TD {
+	background-color: #f4ff03;
+}
+#content .statusOdd {
+	background-color: #f4ffd0;
+}
+#uploaded_mib {
+	background-color: #f4ff03;
+}
+#error {
+	background-color: #f4ff03;
+}

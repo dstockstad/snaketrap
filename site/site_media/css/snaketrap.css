@@ -14,31 +14,64 @@ You should have received a copy of the GNU General Public License
 along with SnakeTrap.  If not, see <http://www.gnu.org/licenses/>. */
 
 body {
-	font-family: arial, verdana, serif;
+	font-family: arial, serif;
 	font-weight: normal;
 	font-size: 10pt;
-	}
-
-
-a:link {
-	color: black;
+	color: #000000;
 }
 
 a img {
 	border: none;
 }
 
-A:link {text-decoration: none; color: #000000;}
-A:visited {text-decoration: none; color: #000000;}
-A:active {text-decoration: none; color: #000000;}
-A:hover {text-decoration: underline; color: #000000;}
+A:link {
+	text-decoration: none;
+	color: #000000;
+}
 
-body {font-size: 62.5%; font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif; }
-fieldset { border:0; margin-bottom: 20px; margin-left: 0px; height: 7em; margin-right: 45px; }	
-label {font-weight: normal; float: left; margin-right: 5px; font-size: 1.1em;}
-select {margin-right: 1em; float: left;}
-.ui-slider {clear: both; top: 5px;}
+A:visited {
+	text-decoration: none;
+	color: #000000;
+}
 
+A:active {
+	text-decoration: none;
+	color: #000000;
+}
+
+A:hover {
+	text-decoration: underline;
+	color: #000000;
+}
+
+#search_time {
+	font-size: 7pt;
+	font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#search_time fieldset {
+	border: 0;
+	margin-bottom: 20px;
+	margin-left: 0px;
+	height: 7em;
+	margin-right: 45px;
+}
+	
+#search_time label {
+	float: left;
+	margin-right: 5px;
+	font-size: 1.1em;
+}
+
+#search_time select {
+	margin-right: 1em;
+	float: left;
+	}
+
+#search_time .ui-slider {
+	clear: both;
+	top: 5px;
+}
 
 #top {
 	width: 100%;
@@ -47,20 +80,15 @@ select {margin-right: 1em; float: left;}
 H1 {
 	margin-top: 0px;
 	margin-bottom: 0px;
+	font-size: 14pt;
 }
 
 H2 {
-	font-family: arial,serif;  
-	font-size: 10pt;
-	color: #000000; 
 	font-weight: bold;
 }
 
 H3 {
-	font-family: arial,serif;  
 	font-size: 8pt;
-	color: #000000; 
-	font-weight: normal;
 }
 
 html {
@@ -68,97 +96,113 @@ html {
 	overflow-y: scroll;
 }
 
+#notfound_content {
+	padding: 30px;
+}
+
 #content {
-	padding: 5px;
-	background-color: #7dff9c;
+	padding: 0px;
 	-moz-border-radius: 1em 1em 1em 1em;
 	border-radius: 1em 1em 1em 1em;
+	border: 5px solid black;
 }
-#content .status { font-family: arial,serif;  background-color: white;  color: black; padding: 10px;}
-#content TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; width: 100%; border-spacing: 0px; }
-#content TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 1%; text-align: center; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#content TH.message_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 35%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#content TH { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 10%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#content DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#content TD { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#content TD.odd { text-align: left; background-color: #ffffff; padding: 0px; text-align: center;}
-#content TD.even { text-align: left; background-color: #ffffff; padding: 0px; text-align: center;}
+
+#content TABLE {
+	padding: 0px;
+	width: 100%;
+	border-spacing: 0px;
+}
+
+#content TH.checkbox_width {
+	text-align: left;
+	background-color: #000000;
+	width: 1%;
+	text-align: center;
+}
+
+#content TH.message_width {
+	text-align: left;
+	background-color: #000000;
+	width: 35%;
+}
+
+#content TH {
+	text-align: left;
+	background-color: #000000;
+	width: 10%;
+}
+
+#content TD {
+	text-align: left;
+	background-color: #ffffff;
+	padding: 0px;
+	text-align: center;
+}
+
 #content P.license_info {
-	padding: 10px;
-	font-family: arial,serif;  
-	font-size: 10pt;
+	padding-left: 20px;
+	padding-bottom: 10px;
 }
+
 #menu {
 	margin-left: 170px;
-	font-family: arial,serif;  
-	font-size: 10pt;  
 	font-weight: bold;
 	vertical-align: bottom;
 	margin-top: 0px;
+	font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+#menu A {
+	color: #ffffff;
+}
 
 #menu TABLE.menu_small {
-	width: 200px;
+	width: 80px;
 	padding: 0px;
 	border-spacing: 3px 0px;
 	vertical-align: bottom;
 }
 
 #menu TABLE.menu_full {
-	width: 600px;
+	width: 620px;
 	padding: 0px;
-	border-spacing: 3px 0px;
+	border-spacing: 5px 0px;
 	vertical-align: bottom;
 }
 
-#menu TH.menu_administration {
-	background-color: #086f42; 
+#menu TH {
 	border-radius: 1em 1em 0em 0em;
 	-moz-border-radius: 1em 1em 0em 0em;
+	background-color: #000000;
+	text-align: center;
+}
+
+#menu TH.menu_administration {
 	width: 110px;
-	height: 25px;
-	text-align: center; 
+	height: 20px;
 }
 
 #menu TH.menu_snmptt_def {
-	background-color: #086f42; 
-	border-radius: 1em 1em 0em 0em;
-	-moz-border-radius: 1em 1em 0em 0em;
 	width: 130px;
-	height: 25px;
-	text-align: center; 
+	height: 20px;
 }
 
 #menu TH.menu_mibs {
-	background-color: #086f42; 
-	border-radius: 1em 1em 0em 0em;
-	-moz-border-radius: 1em 1em 0em 0em;
 	width: 80px;
-	height: 25px;
-	text-align: center; 
+	height: 20px;
 }
 
 #menu TH.menu_traps {
-	background-color: #086f42; 
-	border-radius: 1em 1em 0em 0em;
-	-moz-border-radius: 1em 1em 0em 0em;
 	width: 80px;
-	height: 25px;
-	text-align: center; 
+	height: 20px;
 }
 
 #menu TH.menu_unknown_traps {
-	background-color: #086f42; 
-	border-radius: 1em 1em 0em 0em;
-	-moz-border-radius: 1em 1em 0em 0em;
 	width: 120px;
-	height: 25px;
-	text-align: center; 
+	height: 20px;
 }
 
-
-#logo { 
+#logo {
 	font-size: 12pt;
 	padding: 10px;
 	width: 100px;
@@ -170,60 +214,69 @@ html {
 	position: absolute;
 	top: 0px;
 	right: 35px;
-	font-family: arial,serif;  
-	font-size: 8pt;  
-	background-color: #0bc3d4; 
-	color: #000000;
+	font-size: 8pt;
 	border-radius: 0em 0em 1em 1em;
 	-moz-border-radius: 0em 0em 1em 1em;
-	width: 120px;
+	width: 160px;
 	height: 30px;
-	text-align: center; 
-	padding: 5px; 
+	text-align: center;
+	padding: 5px;
 	vertical-align: middle;
+	border-bottom: 5px solid black;
+	border-left: 5px solid black;
+	border-right: 5px solid black;
 }
 
-#trap_bar { 
-	font-weight: bold; 
-	font-family: arial,serif;  
-	font-size: 10pt;  
-	text-align: right; 
+
+#trap_bar {
+	font-weight: bold;
+	text-align: right;
 	border-radius: 1em 1em 0em 0em;
 	-moz-border-radius: 1em 1em 0em 0em;
-	background-color: #7dff9c;
 	height: 40px;
 }
 
 #trap_bar P.pagesize {
-	font-weight: bold; 
-	font-family: arial,serif;  
-	font-size: 10pt;
+	font-weight: bold;
 	margin-right: 0px;
 	margin-bottom: auto;
 	margin-top: auto;
 	padding: 15px;
 	text-align: right;
 }
+
 	
-#trap_bar A { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; color: #000000;  padding: 0px; }
-
-
-#def_bar { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; }
-#def_bar DIV { font-family: arial,serif;  font-size: 10pt;  text-align: center; }
-#def_bar TABLE { font-family: arial,serif;  font-size: 8pt; width: 100%; border-spacing: 0px; padding: 0px; background-color: #ffffff; }
-#def_bar TH { 
-	padding: 0px; 
-	font-family: arial,serif;  
-	font-size: 10pt;  
+#trap_bar A {
+	font-weight: bold;
 	text-align: left;
-	background-color: #7dff9c;
-	color: #000000; 
+	padding: 0px;
+}
+
+#def_bar {
+	font-weight: bold;
+	text-align: left;
+	border-radius: 1em 1em 0em 0em;
+	-moz-border-radius: 1em 1em 0em 0em;
+	padding: 2px;
+}
+
+#def_bar TABLE {
+	width: 100%;
+	border-spacing: 0px;
+	padding: 0px;
+	background-color: #000000;
+}
+
+#def_bar TH {
+	padding: 0px;
+	text-align: left;
+	background-color: #000000;
 	spacing: 0px;
 }
 
-#def_bar P.left { padding: 0px; font-family: arial,serif;  font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
+#def_bar P.left {
+	padding: 0px;
+	background-color: #000000 
 	border-spacing: 0px;
 	margin-left: 10px;
 	margin-top: 2px;
@@ -231,155 +284,112 @@ html {
 	text-align: left;
 }
 
-#def_bar TD.left { padding: 10px; font-family: arial,serif;  font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
+#def_bar TD {
+	padding: 10px;
 	border-spacing: 0px;
+}
+
+#def_bar TD.left {
 	margin-right: auto;
 	text-align: left;
 }
-#def_bar TD.right { padding: 10px; font-family: arial,serif;  font-size: 10pt;  text-align: right;
-	background-color: #7dff9c; 
-	color: #000000; 
-	border-spacing: 0px;
+
+#def_bar TD.right {
+	text-align: right;
 }
-#def_bar A { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; color: #000000;  padding: 0px; }
 
-
-#add_permission { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; background-color: #7dff9c}
-
-#addPermission { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; background-color: #ffffff}
-#addPermission DIV { font-family: arial,serif;  font-size: 10pt;  text-align: center; background-color: #ffffff; }
-#addPermission TABLE { font-family: arial,serif;  font-size: 8pt; width: 100%; border-spacing: 0px; padding: 0px; background-color: #ffffff; }
-#addPermission TH { 
-	padding: 0px; 
-	font-family: arial,serif;  
-	font-size: 10pt;  
+#def_bar A {
+	font-weight: bold;
 	text-align: left;
-	background-color: #7dff9c;
-	color: #000000; 
-	spacing: 0px;
-	border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 1em 1em 1em;
 }
-
-#addPermission P { padding: 0px; font-family: arial,serif;  font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
-	border-spacing: 0px;
-	border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 1em 1em 1em;
-	margin-left: 10px;
-	margin-right: auto;
-	margin-top: 2px;
-	margin-bottom: 5px;
-}
-
-#addPermission TD { padding: 5px; font-family: arial,serif;  font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
-	border-spacing: 0px;
-	border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 0em 0em 0em;
-	margin-left: 200px;
-	margin-right: auto;
-}
-
-#addPermission A { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; color: #000000;  padding: 0px; }
-
-#addAction { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; background-color: #ffffff}
-#addAction DIV { font-family: arial,serif;  font-size: 10pt;  text-align: center; background-color: #ffffff; }
-#addAction TABLE { font-family: arial,serif;  font-size: 8pt; width: 100%; border-spacing: 0px; padding: 0px; background-color: #ffffff; }
-#addAction TH { 
-	padding: 0px; 
-	font-family: arial,serif;  
-	font-size: 10pt;  
-	text-align: left;
-	background-color: #7dff9c;
-	color: #000000; 
-	spacing: 0px;
-	border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 1em 1em 1em;
-}
-
-#addAction P { padding: 0px; font-family: arial,serif;  font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
-	border-spacing: 0px;
-	border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 1em 1em 1em;
-	margin-left: 10px;
-	margin-right: auto;
-	margin-top: 2px;
-	margin-bottom: 5px;
-}
-
-#addAction TD { padding: 5px; font-family: arial,serif;  font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
-	border-spacing: 0px;
-	border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 1em 1em 1em;
-	margin-left: 200px;
-	margin-right: auto;
-}
-
-#addAction A { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; color: #000000;  padding: 0px; }
 
 #trapTable {
 	padding: 10px;
-	background-color: #7dff9c;
 	-moz-border-radius: 0em 0em 1em 1em;
 	border-radius: 0em 0em 1em 1em;
+	font-size: 8pt;
 }
-#trapTable .status { font-family: arial,serif;  background-color: white;  color: black; padding: 10px;}
-#trapTable TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; width: 100%; border-spacing: 1px; }
-#trapTable TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 1%; text-align: center; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#trapTable TH.message_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 35%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#trapTable TH { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 10%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#trapTable DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#trapTable TD { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#trapTable TD.odd { text-align: left; background-color: #ffffff; padding: 0px; text-align: center;}
-#trapTable TD.even { text-align: left; background-color: #ffffff; padding: 0px; text-align: center;}
 
-#actionTable {
-	padding: 10px;
-	background-color: #7dff9c;
-	-moz-border-radius: 0em 0em 1em 1em;
-	border-radius: 0em 0em 1em 1em;
+#trapTable TABLE {
+	background-color: #000000;
+	padding: 0px;
+	width: 100%;
+	border-spacing: 1px;
 }
-#actionTable .status { font-family: arial,serif;  background-color: white;  color: black; }
-#actionTable TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; border: 1; width: 100%; border-spacing: 1px}
-#actionTable TH.action { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 30%; text-align: center; border-radius: 1em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#actionTable TH.commandline { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 70%; border-radius: 0em 1em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#actionTable TH { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 10%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#actionTable DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#actionTable TD { text-align: left; background-color: #ffffff; padding: 5px; text-align: center; }
-#actionTable TD.odd { text-align: left; background-color: #ffffff; padding: 5px; text-align: center; }
-#actionTable TD.even { text-align: left; background-color: #ffffff; padding: 5px; text-align: center;}
+
+#trapTable TH.checkbox_width {
+	text-align: left;
+	background-color: #ffffff;
+	width: 1%;
+	text-align: center;
+}
+
+#trapTable TH.message_width {
+	text-align: left;
+	background-color: #ffffff;
+	width: 35%;
+}
+
+#trapTable TH {
+	text-align: left;
+	background-color: #ffffff;
+	width: 10%;
+}
+
+#trapTable TD {
+	text-align: left;
+	background-color: #ffffff;
+	padding: 0px;
+	text-align: center;
+}
 
 #defTable {
 	padding: 10px;
-	background-color: #7dff9c;
 	-moz-border-radius: 0em 0em 1em 1em;
 	border-radius: 0em 0em 1em 1em;
 }
-#defTable .status { font-family: arial,serif;  background-color: white;  color: black; }
-#defTable TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; width: 100%; border-spacing: 1px;}
-#defTable TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 1%; text-align: center; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#defTable TH.message_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 35%; border-radius: 0em 1em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#defTable TH { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 10%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#defTable DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#defTable TD { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#defTable TD.odd { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#defTable TD.even { text-align: left; background-color: #ffffff; padding: 0px; text-align: center;}
+
+#defTable TABLE {
+	font-size: 8pt;
+	background-color: #000000;
+	padding: 0px;
+	width: 100%;
+	border-spacing: 1px;
+}
+
+#defTable TH.checkbox_width {
+	text-align: left;
+	background-color: #ffffff;
+	width: 1%;
+	text-align: center;
+}
+
+#defTable TH.message_width {
+	text-align: left;
+	background-color: #ffffff;
+	width: 35%;
+}
+
+#defTable TH {
+	text-align: left;
+	background-color: #ffffff;
+	width: 10%;
+}
+
+#defTable TD {
+	text-align: left;
+	background-color: #ffffff;
+	padding: 0px;
+	text-align: center;
+}
 
 #mass_change_form_objects {
 	width: 250px;
 	padding: 10px;
-	background-color: #eaff00;
+	background-color: red;
 	-moz-border-radius: 1em 1em 1em 1em;
 	border-radius: 1em 1em 1em 1em;
+	font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 #mass_change_form_objects LI {
@@ -388,7 +398,7 @@ html {
 
 #mass_change {
 	padding: 10px;
-	background-color: #7dff9c;
+;
 	-moz-border-radius: 1em 1em 1em 1em;
 	border-radius: 1em 1em 1em 1em;
 }
@@ -397,248 +407,305 @@ html {
 	margin-left: 20px;
 }
 
-#mass_change .status { font-family: arial,serif;  background-color: white;  color: black; }
-#mass_change TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; width: 100%; }
-#mass_change TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 1%; text-align: center; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#mass_change TH.message_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 35%; border-radius: 0em 1em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#mass_change TH { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 10%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#mass_change DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#mass_change TD { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#mass_change TD.odd { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#mass_change TD.even { text-align: left; background-color: #ffffff; padding: 0px; text-align: center;}
-
-#mibTable {
-	padding: 10px;
-	background-color: #7dff9c;
-	-moz-border-radius: 0em 0em 1em 1em;
-	border-radius: 0em 0em 1em 1em;
-}
-#mibTable .status { font-family: arial,serif;  background-color: white;  color: black; }
-#mibTable TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; width: 45%; border-spacing: 1px; }
-#mibTable TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 1%; text-align: center; }
-#mibTable TH { font-family: arial,serif;  font-size: 10pt;  text-align: center;  background-color: #086f42;  color: #000000; width: 99%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#mibTable DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#mibTable TD { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#mibTable TD.odd { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#mibTable TD.even { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#mibTable P { 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	color: #000000; 
+#mass_change TABLE {
+	font-size: 8pt;
+	background-color: #000000;
 	padding: 0px;
-	margin-left: 10px;
-	spacing: 0px;
+	width: 100%;
 }
 
-#upload_mib { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; }
-
-#upload_mib DIV { font-family: arial,serif;  font-size: 10pt;  text-align: center; }
-#upload_mib TABLE { 
-	font-family: arial,serif;
-	font-size: 8pt; 
-	width: 300px; 
-	border-spacing: 0px; 
-	background-color: #7dff9c; 
-	margin-left: 10px;
-}
-#upload_mib TH { 
-	padding: 0px; 
-	font-family: arial,serif;  
-	font-size: 10pt;  
+#mass_change TH.checkbox_width {
 	text-align: left;
-	background-color: #7dff9c;
-	color: #000000; 
-	spacing: 0px;
+	background-color: #000000;
+	width: 1%;
+	text-align: center;
 }
 
-#upload_mib P { 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	background-color: #086f42;
-	color: #000000; 
-	padding: 0px;
-	margin-left: 10px;
-	spacing: 0px;
-}
-
-#upload_mib TD { 
-	padding: 0px; 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	background-color: #086f42;
-	color: #000000; 
-	border-spacing: 0px;
+#mass_change TH.message_width {
 	text-align: left;
-	width: 300px;
-	-moz-border-radius: 1em 1em 1em 1em;
-	border-radius: 1em 1em 1em 1em;
-}
-
-#upload_mib A { font-weight: bold; font-family: arial,serif;  font-size: 10pt;  text-align: left; }
-
-#content_login .status { font-family: arial,serif;  background-color: white;  color: black; }
-#content_login TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #ffffff;  padding: 2px; border: 1; width: 30%; align: center; }
-#content_login TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 3% ; }
-#content_login TH { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 97% ; }
-#content_login DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#content_login TD { text-align: left; background-color: #ffffff; }
-#content_login TD.odd { text-align: left; background-color: #ffffff; }
-#content_login TD.even { text-align: left; background-color: #ffffff; }
-
-#permissionsTable .status { font-family: arial,serif;  background-color: white;  color: black; }
-#permissionsTable TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; width: 100% border-spacing: 0px; }
-#permissionsTable TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 1%; text-align: center; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#permissionsTable TH.message_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 35%; border-radius: 0em 1em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#permissionsTable TH { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 10%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#permissionsTable DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#permissionsTable TD { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#permissionsTable TD.odd { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#permissionsTable TD.even { text-align: left; background-color: #ffffff; padding: 0px; text-align: center;} 
-
-#content .severityINFORMATIONAL { font-family: arial,serif;  font-size: 8pt;  background-color: #109843; font-weight: bold; }
-#content .severityNormal { font-family: arial,serif;  font-size: 8pt;  background-color: #109843; font-weight: bold; }
-#content .severityWARNING { font-family: arial,serif;  font-size: 8pt;  background-color: #fcff11; font-weight: bold; }
-#content .severityMINOR { font-family: arial,serif;  font-size: 8pt;  background-color: #fcff11; font-weight: bold; }
-#content .severityMAJOR { font-family: arial,serif;  font-size: 8pt;  background-color: #e85700; font-weight: bold; }
-#content .severityCRITICAL { font-family: arial,serif;  font-size: 8pt;  background-color: #e81717; font-weight: bold; }
-
-#content .statusOdd { font-family: arial,serif;  font-size: 8pt;  background-color: #8dffd4; height: 30px; }
-#content .statusEven { font-family: arial,serif;  font-size: 8pt;  background-color: #ffffff; height: 30px; }
-
-#options_pagesize P { 
-	text-align: right; 
-	margin-left: 0px;
-	margin-right: 0px;
-	margin-top: 2px;
-	margin-bottom: 0px;
-	padding: 0px; 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
-	border-spacing: 0px;
-	border-radius: 1em 1em 1em 1em;
-	-moz-border-radius: 1em 1em 1em 1em;
-}
-
-#options_save P { 
-	text-align: left; 
-	margin-left: 0px;
-	margin-right: auto;
-	margin-top: 0px;
-	margin-bottom: 5px;
-	padding: 0px; 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	background-color: #7dff9c; 
-	color: #000000; 
-	border-spacing: 0px;
-	border-radius: 0em 0em 0em 0em;
+	background-color: #000000;
+	width: 35%;
+	border-radius: 0em 1em 0em 0em;
 	-moz-border-radius: 0em 0em 0em 0em;
 }
 
-#uploaded_mib { 
-	font-weight: normal; 
-	font-family: arial,serif;  
-	background-color: white;  
-	color: black; 
-	font-size: 10pt; 
-	background-color: #7dff9c; 
-	margin-top: 10px; 
-	border-radius: 1em 1em 1em 1em; 
-	-moz-border-radius: 1em 1em 1em 1em; 
-	width: 99%; 
-	margin-top: 0px; 
+#mass_change TH {
+	text-align: left;
+	background-color: #000000;
+	width: 10%;
+}
+
+#mass_change TD {
+	text-align: left;
+	background-color: #ffffff;
+	padding: 0px;
+	text-align: center;
+}
+
+#mibTable {
+	padding: 10px;
+	-moz-border-radius: 0em 0em 1em 1em;
+	border-radius: 0em 0em 1em 1em;
+}
+
+#mibTable TABLE {
+	font-size: 8pt;
+	background-color: #000000;
+	padding: 0px;
+	width: 45%;
+	border-spacing: 1px;
+}
+
+#mibTable TH.checkbox_width {
+	text-align: left;
+	background-color: #ffffff;
+	width: 1%;
+	text-align: center;
+}
+
+#mibTable TH {
+	text-align: center;
+	background-color: #ffffff;
+	width: 99%;
+}
+
+#mibTable TD {
+	text-align: left;
+	background-color: #ffffff;
+	padding: 0px;
+	text-align: center;
+}
+
+#mibTable P {
+	padding: 0px;
+	margin-left: 10px;
+	spacing: 0px;
+}
+
+#upload_mib {
+	font-weight: bold;
+	text-align: left;
+	-moz-border-radius: 1em 1em 0em 0em;
+	border-radius: 1em 1em 0em 0em;
+}
+
+#upload_mib TABLE {
+	font-size: 8pt;
+	width: 300px;
+	border-spacing: 0px;
+	background-color: #000000;
+	margin-left: 10px;
+}
+
+#upload_mib TH {
+	padding: 0px;
+	text-align: left;
+	background-color: #000000;
+	spacing: 0px;
+}
+
+#upload_mib P {
+	padding: 0px;
+	margin-left: 10px;
+	spacing: 0px;
+}
+
+#upload_mib TD {
+	padding: 0px;
+	border-spacing: 0px;
+	text-align: left;
+	width: 300px;
+}
+
+#upload_mib A {
+	font-weight: bold;
+	text-align: left;
+}
+
+#login_content {
+	padding: 2px;
+	background-color: #ffffff;
+	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em 1em 1em 1em;
+	width: 300px;
+	text-align: center;
+	border: 5px solid black;
+}
+
+#login_content TABLE {
+	font-size: 8pt;
+	background-color: #ffffff;
+	padding: 2px;
+	border: 1;
+	width: 30%;
+	align: center;
+}
+
+#login_content TH {
+	text-align: left;
+	background-color: #ffffff;
+	width: 97%;
+	padding: 5px;
+}
+
+#login_content TD {
+	text-align: left;
+	background-color: #ffffff;
+}
+
+#content .severityINFORMATIONAL {
+	font-size: 8pt;
+	background-color: #109843;
+	font-weight: bold;
+}
+
+#content .severityNormal {
+	font-size: 8pt;
+	background-color: #109843;
+	font-weight: bold;
+}
+
+#content .severityWARNING {
+	font-size: 8pt;
+	background-color: #fcff11;
+	font-weight: bold;
+}
+
+#content .severityMINOR {
+	font-size: 8pt;
+	background-color: #fcff11;
+	font-weight: bold;
+}
+
+#content .severityMAJOR {
+	font-size: 8pt;
+	background-color: #e85700;
+	font-weight: bold;
+}
+
+#content .severityCRITICAL {
+	font-size: 8pt;
+	background-color: #e81717;
+	font-weight: bold;
+}
+
+#content .statusOdd {
+	font-size: 8pt;
+	height: 30px;
+}
+
+#content .statusEven {
+	font-size: 8pt;
+	background-color: #ffffff;
+	height: 30px;
+}
+
+#uploaded_mib {
+	background-color: white;
+	color: black;
+	margin-top: 10px;
+	border-radius: 1em 1em 1em 1em;
+	-moz-border-radius: 1em 1em 1em 1em;
+	width: 99%;
+	margin-top: 0px;
 	padding: 10px;
 }
 
-#uploaded_mib .status { font-family: arial,serif;  background-color: white;  color: black; }
-#uploaded_mib TABLE { font-family: arial,serif;  font-size: 8pt;  background-color: #000000;  padding: 0px; width: 45%; margin-left: 10px; margin-top: 10px; }
-#uploaded_mib TH.checkbox_width { font-family: arial,serif;  font-size: 10pt;  text-align: left;  background-color: #086f42;  color: #000000; width: 1%; text-align: center; }
-#uploaded_mib TH { font-family: arial,serif;  font-size: 10pt;  text-align: center;  background-color: #086f42;  color: #000000; width: 99%; border-radius: 0em 0em 0em 0em; -moz-border-radius: 0em 0em 0em 0em; }
-#uploaded_mib DIV { font-family: arial,serif;  font-size: 8pt;  text-align: left; }
-#uploaded_mib TD { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#uploaded_mib TD.odd { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
-#uploaded_mib TD.even { text-align: left; background-color: #ffffff; padding: 0px; text-align: center; }
+#uploaded_mib TABLE {
+	font-size: 8pt;
+	background-color: #000000;
+	padding: 0px;
+	width: 45%;
+	margin-left: 10px;
+	margin-top: 10px;
+}
 
-#uploaded_mib P.import_errors { 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	color: #000000; 
+#uploaded_mib TH.checkbox_width {
+	text-align: left;
+	background-color: #000000;
+	width: 1%;
+	text-align: center;
+}
+
+#uploaded_mib TH {
+	text-align: center;
+	background-color: #000000;
+	width: 99%;
+}
+
+#uploaded_mib TD {
+	text-align: left;
+	background-color: #ffffff;
+	padding: 0px;
+	text-align: center;
+}
+
+#uploaded_mib P.import_errors {
 	padding: 0px;
 	margin-bottom: 0px;
 	spacing: 0px;
 }
 
-#uploaded_mib P.import_info { 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	font-weight: normal;
-	color: #000000; 
+#uploaded_mib P.import_info {
 	padding: 0px;
 	margin-bottom: 0px;
 	spacing: 0px;
 }
 
-#uploaded_mib P.import_summary { 
-	font-family: arial,serif;  
-	font-size: 10pt;
-	color: #000000; 
+#uploaded_mib P.import_summary {
 	padding: 0px;
 	margin-bottom: 0px;
 	spacing: 0px;
 }
 
 #pagination {
-	font-family: arial,serif;  
-	font-size: 10pt;
-	color: #000000; 
-	padding: 5px 13px;
+	font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-weight: bold;
+	color: #ffffff;
+	padding: 0px 7px;
 	margin-left: auto;
 	margin-right: auto;
-	margin-bottom: 0px;
 	-moz-border-radius: 0em 0em 1em 1em;
 	border-radius: 0em 0em 1em 1em;
-	background-color: #086f42;
-	width: 200px;
+	background-color: #000000;
+	width: 240px;
+	height: 23px;
+}
+
+#pagination A {
+	color: #ffffff;
 }
 
 #pagination TABLE {
-	background-color: #086f42;
+	background-color: #000000;
 	border-spacing: 0px;
+}
 
+#pagination TD {
+	background-color: #000000;
 }
 
 #pagination TD.left {
 	width: 65px;
 	text-align: left;
-	background-color: #086f42;
 }
 
 #pagination TD.middle {
 	text-align: center;
-	background-color: #086f42;
-	width: 100px;
+	width: 140px;
 }
 
 #pagination TD.right {
 	width: 35px;
 	text-align: right;
-	background-color: #086f42;
 }
 
-#error { 
-	font-weight: normal; 
-	font-family: arial,serif;  
-	background-color: white;  
-	color: black; 
-	font-size: 10pt; 
-	background-color: #7dff9c; 
-	margin-top: 10px; 
-	border-radius: 1em 1em 1em 1em; 
-	-moz-border-radius: 1em 1em 1em 1em; 
-	width: 99%; 
-	margin-top: 0px; 
+#error {
+	margin-top: 10px;
+	border-radius: 1em 1em 1em 1em;
+	-moz-border-radius: 1em 1em 1em 1em;
+	width: 99%;
+	margin-top: 0px;
 	padding: 10px;
 }
 

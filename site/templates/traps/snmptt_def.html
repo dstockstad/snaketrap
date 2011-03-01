@@ -14,7 +14,8 @@
 				</td>
 				<td class="right">
 					<b>Results/page: </b>
-					<b><a href="?pagesize=10&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">10</a>
+					<b><a href="?pagesize=5&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">5</a>
+					<a href="?pagesize=10&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">10</a>
 					<a href="?pagesize=20&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">20</a>
 					<a href="?pagesize=50&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">50</a>
 					<a href="?pagesize=100&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">100</a>
@@ -27,24 +28,23 @@
 	<div id="defTable">
 
 	{% if snmptt_defs %}
-		<div id="search_date_added" style="display: none">
+		<div id="search_time" style="display: none">
 		<form method="GET">
-			{% csrf_token %}
 			<!-- demo 2 -->
 			<fieldset>
-				<INPUT TYPE="hidden" NAME="search_column" VALUE="date_added,date_added">
-				<INPUT TYPE="hidden" NAME="search_type" VALUE="gte,lte">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="date_added|||date_added">
+				<INPUT TYPE="hidden" NAME="search_type" VALUE="gte|||lte">
 				<label for="date_from">From:</label>
 				<select name="query" id="date_from">
 					{% for day in dates %}
-						<option value="{{ day }}">{{ day }}</option>
+						<option value="{{ day }} 00:00:00">{{ day }}</option>
 					{% endfor %}
 				</select>
 	
 				<label for="date_to">To:</label>
 				<select name="query" id="date_to">
 					{% for day in dates %}
-						<option value="{{ day }}">{{ day }}</option>
+						<option value="{{ day }} 23:59:59">{{ day }}</option>
 					{% endfor %}
 				</select>
 			</fieldset>
@@ -75,6 +75,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -98,6 +99,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -121,6 +123,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -144,6 +147,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -167,6 +171,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -190,13 +195,14 @@
 						<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
 			</div>
 		</th>
 		<th>
-			<a href=javascript:toggleDiv('search_date_added')>Date Added</a>
+			<a href=javascript:toggleDiv('search_time')>Date Added</a>
 			<a href="?pagesize={{ args.pagesize }}&order=date_added&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
 			<a href="?pagesize={{ args.pagesize }}&order=-date_added&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
 		</th>
@@ -220,6 +226,7 @@
 						<OPTION VALUE="{{ args.search_type }}|||nnull">Is Not NULL</OPTION>
 					</SELECT>
 					<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+					<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
 					<INPUT NAME="query">
 					<INPUT TYPE="submit">
 				</form>
@@ -236,15 +243,15 @@
 			<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_oids" type="checkbox" value="{{ snmptt_def.oid }}"></td>
 			<td class="status{% cycle 'Odd' 'Even' %}">
 				{{ snmptt_def.oid }}
-				<a href="{{ URL_PREFIX }}/admin/traps/snmptt_def/{{ snmptt_def.oid }}/"><img src="{{ MEDIA_URL }}/images/wrench.png" /></a>
+				<a href="{% url admin:index %}/traps/snmptt_def/{{ snmptt_def.oid }}/"><img src="{{ MEDIA_URL }}/images/wrench.png" /></a>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">
 				<a href=javascript:toggleDiv('{{ snmptt_def }}_{{ snmptt_def.oid_name }}')>{{ snmptt_def.oid_name }}</a>
 				<div style="display:none" id="{{ snmptt_def }}_{{ snmptt_def.oid_name }}">
 					<br />
-					<b><a href="?search_column={{ args.search_column }}|||oid_name&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.oid_name }}">Add to search</a></b><br />
-					<b><a href="?search_column={{ args.search_column }}|||oid_name&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.oid_name }}">Remove from search</a></b><br />
-					<b><a href="?search_column=,oid_name&search_type=,eq&query=,{{ snmptt_def.oid_name }}">Search</a></b><br />
+					<b><a href="?pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||oid_name&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.oid_name }}">Add to search</a></b><br />
+					<b><a href="?pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||oid_name&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.oid_name }}">Remove from search</a></b><br />
+					<b><a href="?pagesize={{ args.pagesize }}&search_column=|||oid_name&search_type=|||eq&query=|||{{ snmptt_def.oid_name }}">Search</a></b><br />
 				</div>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">{{ snmptt_def.event_type }}</td>
@@ -252,9 +259,9 @@
 				<a href=javascript:toggleDiv('{{ snmptt_def }}_{{ snmptt_def.severity }}')>{{ snmptt_def.severity }}</a>
 				<div style="display:none" id="{{ snmptt_def }}_{{ snmptt_def.severity }}">
 					<br />
-					<b><a href="?search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.severity }}">Add to search</a></b><br />
-					<b><a href="?search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.severity }}">Remove from search</a></b><br />
-					<b><a href="?search_column=,severity&search_type=,eq&query=,{{ snmptt_def.severity }}">Search</a></b><br />
+					<b><a href="?pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.severity }}">Add to search</a></b><br />
+					<b><a href="?pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.severity }}">Remove from search</a></b><br />
+					<b><a href="?pagesize={{ args.pagesize }}&search_column=|||severity&search_type=|||eq&query=|||{{ snmptt_def.severity }}">Search</a></b><br />
 				</div>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">{{ snmptt_def.format }}</td>
@@ -265,9 +272,9 @@
 					<a href=javascript:toggleDiv('{{ snmptt_def }}_{{ snmptt_def.action_name|slugify }}')>{{ snmptt_def.action_name }}</a>
 					<div style="display:none" id="{{ snmptt_def }}_{{ snmptt_def.action_name|slugify }}">
 						<br />
-						<b><a href="?search_column={{ args.search_column }}|||action_name&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.action_name }}">Add to search</a></b><br />	
-						<b><a href="?search_column={{ args.search_column }}|||action_name&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.action_name }}">Remove from search</a></b><br />
-						<b><a href="?search_column=,action_name&search_type=,eq&query=,{{ snmptt_def.action_name }}">Search</a></b><br />
+						<b><a href="?pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||action_name&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.action_name }}">Add to search</a></b><br />	
+						<b><a href="?pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||action_name&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.action_name }}">Remove from search</a></b><br />
+						<b><a href="?pagesize={{ args.pagesize }}&search_column=|||action_name&search_type=|||eq&query=|||{{ snmptt_def.action_name }}">Search</a></b><br />
 					</div>
 				{% endif %}
 			</td>

@@ -1,0 +1,45 @@
+#content {
+	background-color: #0aaff4;
+}
+#user {
+	background-color: #0aaff4;
+}
+#trap_bar {
+	background-color: #0aaff4;
+}
+#def_bar TD {
+	background-color: #0aaff4;
+}
+#trapTable {
+	background-color: #0aaff4;
+}
+#defTable {
+	background-color: #0aaff4;
+}
+#mass_change_form_objects {
+	background-color: red;
+}
+#mass_change {
+	background-color: #0aaff4;
+}
+#mibTable {
+	background-color: #0aaff4;
+}
+#upload_mib {
+	background-color: #0aaff4;
+}
+#upload_mib P {
+	background-color: #0aaff4;
+}
+#upload_mib TD {
+	background-color: #0aaff4;
+}
+#content .statusOdd {
+	background-color: #c3e9f4;
+}
+#uploaded_mib {
+	background-color: #0aaff4;
+}
+#error {
+	background-color: #0aaff4;
+}

@@ -8,7 +8,7 @@
 	<div id="mass_change">
 	<h2>You are about to {{ title|lower }} on the following objects:</h2><br/>
 	<div id="mass_change_form">
-		<form name="modify_lines" action="{{ URL_PREFIX }}/snmptt_def_mass_change_commit" method="POST">
+		<form name="modify_lines" action="{% url traps.views.snmptt_def_mass_change_commit %}" method="POST">
 			<input type="hidden" name="select_across" value="0">
 			<input type="hidden" name="index" value="0">
 			<input type="hidden" name="action" value="{{ action }}">

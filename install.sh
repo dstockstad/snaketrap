@@ -58,7 +58,7 @@ fi
 # Run some tests to get python version and check if Django and psycopg2 is installed
 ./tests.py
 if [ "$?" -ne 0 ]; then
-	echo "You have failed to meet the requirements, exiting..."
+	echo "You have failed to meet the python requirements, exiting..."
 	exit 1
 fi
 
@@ -84,6 +84,7 @@ fi
 if [ -d $mib_dir ]; then
 	echo "[ mib_dir ] $mib_dir exists, moving to `dirname $mib_dir`/`basename $mib_dir`_$DATE"
 	mv $mib_dir `dirname $mib_dir`/`basename $mib_dir`_$DATE
+	net_snmp_mib_dir=`dirname $mib_dir`/`basename $mib_dir`_$DATE
 fi
 
 if [ -d $tmp_dir ]; then
@@ -130,9 +131,12 @@ while [ "e$db_user" == "e" ]; do
 	read db_user
 done
 
-while [ "e$db_pass" == "e" ]; do
+re_db_pass="a"
+while [ "e$db_pass" != "e$re_db_pass" ] || [ "e$db_pass" == "e" ]; do
 	printf "Enter your database password (will not echo): "
 	read -s db_pass
+	printf "\nEnter it again: "
+	read -s re_db_pass
 	printf "\n"
 done
 
@@ -229,7 +233,6 @@ Allow from all
 </Directory>
 
 WSGIScriptAlias $wsgi_url_prefix $site_dir/apache/traps.wsgi
-WSGIPassAuthorization On
 
 <Directory $site_dir/apache>
 Order deny,allow
@@ -281,7 +284,7 @@ if [ ! -f "$output_snmptt_def" ]; then
 	chown $apache_user:$apache_group "$output_snmptt_def"
 fi
 
-printf "Wrote settings. It is recommended to install settings unless you have old settings you want to use.\n"
+printf "Wrote settings. It is recommended to install settings unless you're familiar with django and want to do everything yourself.\n"
 printf "Do you want to install settings? [Y/n] "
 read input
 
@@ -303,40 +306,43 @@ else
 	echo "Installation Complete!!!"
 	exit 0
 fi
-printf "Installed settings. It is recommended to install the database unless you already have a database.\n"
+
+printf "Installed settings. Do you want to copy mibs from $net_snmp_mib_dir to $mib_dir? [Y/n] "
+read input
+if [ "e$input" == "e" ] || [ "e$input" == "ey" ]; then
+	cp -p "$net_snmp_mib_dir"/* "$mib_dir"
+fi
+
+printf "Copied mibs. It is recommended to install the database unless you already have a database.\n"
 printf "Do you want to install the database? [y/N] "
 read input
 
-if [ "e$input" != "ey" ]; then
-	echo "Not creating a database"
-	echo "Installation Complete! Don't forget to create a database if you don't already have one."
-	exit 0
-fi
-
 mv -f conf/install.post.py `dirname $site_dir`/`basename $site_dir`/install.post.py
 
-echo "Trying to create database tables."
-cd $site_dir
-python manage.py syncdb
-if [ "$?" -ne 0 ]; then
-	echo "Something went wrong when creating database tables, results where logged to $site_dir/install.log."
-	echo "Installation completed with errors"
-	exit 1
+if [ "e$input" == "ey" ]; then
+	echo "Trying to create database tables."
+	cd $site_dir
+	python manage.py syncdb
+	if [ "$?" -ne 0 ]; then
+		echo "Something went wrong when creating database tables, results where logged to $site_dir/install.log."
+		echo "Installation completed with errors"
+		exit 1
+	fi
+	echo "Created database."
+else
+	echo "Not creating a database"
 fi
 
-printf "Created database tables. Do you want to add the included scripts to the database so that you may use them? [Y/n] "
+printf "Do you want to add the included scripts to the database so that you may use them? [Y/n] "
 read input
 if [ "e$input" == "e" ] || [ "e$input" == "ey" ]; then
+	cd $site_dir
 	python ./install.post.py
 	if [ "$?" -ne 0 ]; then
 		echo "Something went wrong when adding the scripts. You may need to add them manually."
 	fi
 fi
 
-printf "Do you want to copy mibs from $net_snmp_mib_dir to $mib_dir? [Y/n] "
-read input
-if [ "e$input" == "e" ] || [ "e$input" == "ey" ]; then
-	cp -p "$net_snmp_mib_dir"/* "$mib_dir"
-fi
 echo "Installation Completed!!!"
 echo "Now restart apache and point your browser to http://`hostname`$url_prefix to start using this kick-ass system ;)"
+echo "Don't forget that if this is your first time installing this system you need to go to the mibs tab and do a "readd" in order to be able to configure actions for them."

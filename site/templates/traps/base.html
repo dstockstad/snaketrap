@@ -7,6 +7,7 @@
 <LINK HREF="{{ MEDIA_URL }}/css/redmond/jquery-ui-1.7.1.custom.css" REL="stylesheet" TYPE="text/css">
 <LINK HREF="{{ MEDIA_URL }}/css/slider.css" REL="stylesheet" TYPE="text/css">
 <LINK HREF="{{ MEDIA_URL }}/css/snaketrap.css" REL="stylesheet" TYPE="text/css">
+<LINK HREF="{{ MEDIA_URL }}/css/themes/aik.css" REL="stylesheet" TYPE="text/css">
 <!--[if lte IE 8]>
         <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/ie.css" />
 <![endif]-->
@@ -36,14 +37,14 @@
 <body>
 <div id="top">
 	<div id="logo">
-		<a href="{{ URL_PREFIX }}/about/"><img src="{{ MEDIA_URL }}/images/snaketrap_logo.png" /></a>
+		<a href="{% url traps.views.about %}"><img src="{{ MEDIA_URL }}/images/snaketrap_logo.png" /></a>
 	</div>
 	<div id="menu">
 		{% block menu %}{% endblock %}
 	</div>
 	<div id="user">
-		Logged in as: {{ user }}
-		<a href="{{ URL_PREFIX }}/logout">Logout</a>
+		Logged in as: {{ user }}<br />
+		<a href="{% url traps.views.logout_view %}">Logout</a>
 	</div>
 </div>
 <div id="content">

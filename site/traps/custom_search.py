@@ -6,7 +6,7 @@ import syslog
 
 # Custom search
 class CustomSearch:
-	def f_search(self, result_list, search_column, search_type, query):
+	def f_search(self, result_list, args):
 		# Translate search arguments to sql
 		sql_search_type = {
 			'like': 'ILIKE',
@@ -22,25 +22,35 @@ class CustomSearch:
 		}
 
 		# Check if search arguments are empty
-		if search_column != '' and search_type != '' and query != '':
+		if args.search_column != '' and args.search_type != '':
 			# Strip beginning , if there is one
-			if search_column.startswith("|||"):
-				search_column = search_column[3:]
-			if search_type.startswith("|||"):
-				search_type = search_type[3:]
-			if str(query).startswith("|||"):
-				query = str(query)[3:]
-
-			s_s_col, s_s_type, s_q = search_column.split("|||"), search_type.split("|||"), query.split("|||")
-			syslog.syslog(str(s_s_col))
-			syslog.syslog(str(s_s_type))
-			syslog.syslog(str(s_q))
-			if len(s_s_col) != len(s_s_type) or len(s_s_col) != len(s_q):
+			if args.search_column.startswith("|||"):
+				args.search_column = args.search_column[3:]
+			if args.search_type.startswith("|||"):
+				args.search_type = args.search_type[3:]
+			if str(args.query).startswith("|||"):
+				args.query = str(args.query)[3:]
+			s_s_col, s_s_type, s_q = args.search_column.split("|||"), args.search_type.split("|||"), args.query.split("|||")
+			if len(s_s_col) != len(s_s_type):
+				syslog.syslog("BLEH")
 				CErr = CustomError()
 				CErr.object = 'Argument Error'
 				CErr.custom_error_type = 'search_column, search_type and query have different number of elements in them'
 				return render_to_response('traps/error.html', {"custom_errors": CErr})
 			# Split and loop
+			i = 0
+			for s_col, s_type, q in map(None, s_s_col, s_s_type, s_q):
+				if s_type == 'null' or s_type == 'nnull':
+					if s_q[i] == '' or s_q[i] == "na":
+						s_q[i] = "na"
+					else:
+						s_q.insert(i, "na")
+				i = i + 1
+
+			syslog.syslog(str(s_s_col))
+			syslog.syslog(str(s_s_type))
+			syslog.syslog(str(s_q))
+
 			for s_col, s_type, q in map(None, s_s_col, s_s_type, s_q):
 				# Add % around query if LIKE or NOT LIKE is specified as an argument
 				if s_type == 'like' or s_type == 'nlike':
@@ -53,5 +63,8 @@ class CustomSearch:
 				else:
 					result_list = result_list.extra(where=[str(s_col) + ' ' + sql_search_type[str(s_type)]])
 
+			args.search_column = "|||".join(s_s_col)
+			args.search_type = "|||".join(s_s_type)
+			args.query = "|||".join(s_q)
 		return(result_list)
 

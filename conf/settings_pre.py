@@ -56,7 +56,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
-    'snaketrap.context_processors.common'
 )
 
 AUTHENTICATION_BACKENDS = (

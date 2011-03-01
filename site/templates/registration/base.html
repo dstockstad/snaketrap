@@ -9,14 +9,7 @@
 <META http-equiv="Content-Type" content="application/xhtml; charset=utf-8" />
 </head>
 <body>
-<h1><a href="{{ URL_PREFIX }}/traps/"><img src="{{ MEDIA_URL }}/images/snaketrap_logo.png" /></a></h1>
-<div id="menu">
-	{% block menu %}{% endblock %}
-</div>
-<div id="options">
-	{% block options %}{% endblock %}
-</div>
-<br />
+<a href="{% url traps.views.about %}"><img src="{{ MEDIA_URL }}/images/snaketrap_logo.png" /></a>
 <div id="login_content">
 	{% block content %}{% endblock %}
 </div>

@@ -13,13 +13,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SnakeTrap.  If not, see <http://www.gnu.org/licenses/>. */
 
+/* 
 #upload_mib TABLE {
 	border-top: 1px solid black; 
 	border-left: 1px solid black;
 	border-right: 1px solid black;
 	border-bottom: 1px solid black; 
 }
-
+*/
 #user {
 	border-bottom: 1px solid black; 
 	border-left: 1px solid black;
@@ -33,6 +34,7 @@ along with SnakeTrap.  If not, see <http://www.gnu.org/licenses/>. */
 	border-bottom: 1px solid black;
 }
 
+/*
 #pagination {
 	border-left: 1px solid black;
 	border-right: 1px solid black;
@@ -68,5 +70,4 @@ along with SnakeTrap.  If not, see <http://www.gnu.org/licenses/>. */
 	border-right: 1px solid black;
 	border-top: 1px solid black;
 }
-
-
+*/
