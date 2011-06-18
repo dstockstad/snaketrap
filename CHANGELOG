@@ -1,0 +1,10 @@
+0.1.2:
+ - Added progation feature
+ - Save icon now glows when there are unsaved changes
+ - Permissions can match exact strings now
+ - Added some help text to the admin
+ - Added display of action help when applying changes to multiple objects on SNMP Definitions page
+ - Some major changes to the API to make it more restful and added paging of results. Also fixed some...err, brokenness
+ - Added version info on about page
+ - Fixed bug on date_added column in snmptt_def table (wrong default value)
+ - Changes to the installation script, so it doesn't overwrite config files

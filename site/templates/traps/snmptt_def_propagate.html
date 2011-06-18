@@ -1,0 +1,306 @@
+{% extends "traps/menu.html" %}
+{% block title %}
+[SnakeTrap] {{ title }}
+{% endblock %}
+{% block options %}
+{% endblock %}
+{% block content %}
+	<div id="propagate">
+		<h2>Please select the objects you want to propagate to:</h2><br/>
+	<div id="defTable">
+		<div id="search_time" style="display: none">
+		<form method="GET">
+			<!-- demo 2 -->
+			<fieldset>
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="date_added|||date_added">
+				<INPUT TYPE="hidden" NAME="search_type" VALUE="gte|||lte">
+				<label for="date_from">From:</label>
+				<select name="query" id="date_from">
+					{% for day in dates %}
+						<option value="{{ day }} 00:00:00">{{ day }}</option>
+					{% endfor %}
+				</select>
+	
+				<label for="date_to">To:</label>
+				<select name="query" id="date_to">
+					{% for day in dates %}
+						<option value="{{ day }} 23:59:59">{{ day }}</option>
+					{% endfor %}
+				</select>
+			</fieldset>
+			<INPUT TYPE="submit">
+		</form>
+		</div>
+
+	<table>
+	<tr>
+	<th class="checkbox_width">
+		<input type="checkbox" name="Check_ctr" value="yes" onclick="javascript:CheckAll(this)">
+	</th>
+	<th>
+		<a href=javascript:toggleDiv('search_oid')>OID</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=oid&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-oid&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		<div style="display:none" id="search_oid">
+			<form name="search_oid" method="GET">
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||oid">
+				<SELECT NAME="search_type">
+					<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+				</SELECT>
+				<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+				<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
+				<INPUT NAME="query">
+				<INPUT TYPE="submit">
+			</form>
+		</div>
+	</th>
+	<th>
+		<a href=javascript:toggleDiv('search_oidname')>OID Name</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=oid_name&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-oid_name&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		<div style="display:none" id="search_oidname">
+			<form name="search_oidname" method="GET">
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||oid_name">
+				<SELECT NAME="search_type">
+					<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+				</SELECT>
+				<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+				<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
+				<INPUT NAME="query">
+				<INPUT TYPE="submit">
+			</form>
+		</div>
+	</th>
+	<th>
+		<a href=javascript:toggleDiv('search_eventtype')>EventType</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=event_type&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-event_type&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		<div style="display:none" id="search_eventtype">
+			<form name="search_eventtype" method="GET">
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||event_type">
+				<SELECT NAME="search_type">
+					<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+				</SELECT>
+				<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+				<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
+				<INPUT NAME="query">
+				<INPUT TYPE="submit">
+			</form>
+		</div>
+	</th>
+	<th>
+		<a href=javascript:toggleDiv('search_severity')>Severity</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=severity&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-severity&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		<div style="display:none" id="search_severity">
+			<form name="search_severity" method="GET">
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||severity">
+				<SELECT NAME="search_type">
+					<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+				</SELECT>
+				<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+				<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
+				<INPUT NAME="query">
+				<INPUT TYPE="submit">
+			</form>
+		</div>
+	</th>
+	<th>
+		<a href=javascript:toggleDiv('search_format')>Format</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=format&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-format&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		<div style="display:none" id="search_format">
+			<form name="search_format" method="GET">
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||format">
+				<SELECT NAME="search_type">
+					<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+				</SELECT>
+				<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+				<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
+				<INPUT NAME="query">
+				<INPUT TYPE="submit">
+			</form>
+		</div>
+	</th>
+	<th class="wide">
+		<a href=javascript:toggleDiv('search_description')>Description</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=description&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-description&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		<div style="display:none" id="search_description">
+			<form name="search_description" method="GET">
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||description">
+				<SELECT NAME="search_type">
+					<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+				</SELECT>
+				<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+				<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
+				<INPUT NAME="query">
+				<INPUT TYPE="submit">
+			</form>
+		</div>
+	</th>
+	<th>
+		<a href=javascript:toggleDiv('search_time')>Date Added</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=date_added&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-date_added&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+	</th>
+	<th>
+		<a href=javascript:toggleDiv('search_action_name')>Action</a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=action_name&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_ascending.png" /></a>
+		<a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&order=-action_name&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}"><img src="{{ MEDIA_URL }}/images/sort_descending.png" /></a>
+		<div style="display:none" id="search_action_name">
+			<form name="search_action_name" method="GET">
+				<INPUT TYPE="hidden" NAME="oid_to_prop" VALUE="{{ prop_settings.oid }}">
+				<INPUT TYPE="hidden" NAME="search_column" VALUE="{{ args.search_column }}|||action_name">
+				<SELECT NAME="search_type">
+					<OPTION VALUE="{{ args.search_type }}|||like" selected>Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nlike">Not Contains</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||eq">Is</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||neq">Is Not</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gt">Greater Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||gte">Greater Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lt">Lesser Than</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||lte">Lesser Than or Equal</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||null">Is NULL</OPTION>
+					<OPTION VALUE="{{ args.search_type }}|||nnull">Is Not NULL</OPTION>
+				</SELECT>
+				<INPUT TYPE="hidden" NAME="query" VALUE="{{ args.query }}">
+				<INPUT TYPE="hidden" NAME="pagesize" VALUE="{{ args.pagesize }}">
+				<INPUT NAME="query">
+				<INPUT TYPE="submit">
+			</form>
+		</div>
+	</th>
+	<th>
+		Arguments
+	</th>
+
+	</tr>
+	<form name="modify_lines" action="{% url traps.views.snmptt_def_propagate_commit %}" method="POST">
+	{% csrf_token %}
+	{% for snmptt_def in available_objects %}
+		<tr>
+		<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_oids" type="checkbox" id="check_all" value="{{ snmptt_def.oid }}"></td>
+		<td class="status{% cycle 'Odd' 'Even' %}">
+			{{ snmptt_def.oid }}
+		</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">
+			<a href=javascript:toggleDiv('{{ snmptt_def }}_{{ snmptt_def.oid_name }}')>{{ snmptt_def.oid_name }}</a>
+			<div style="display:none" id="{{ snmptt_def }}_{{ snmptt_def.oid_name }}">
+				<br />
+				<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||oid_name&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.oid_name }}">Add to search</a></b><br />
+				<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||oid_name&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.oid_name }}">Remove from search</a></b><br />
+				<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column=|||oid_name&search_type=|||eq&query=|||{{ snmptt_def.oid_name }}">Search</a></b><br />
+			</div>
+		</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">{{ snmptt_def.event_type }}</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">
+			<a href=javascript:toggleDiv('{{ snmptt_def }}_{{ snmptt_def.severity }}')>{{ snmptt_def.severity }}</a>
+			<div style="display:none" id="{{ snmptt_def }}_{{ snmptt_def.severity }}">
+				<br />
+				<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.severity }}">Add to search</a></b><br />
+				<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||severity&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.severity }}">Remove from search</a></b><br />
+				<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column=|||severity&search_type=|||eq&query=|||{{ snmptt_def.severity }}">Search</a></b><br />
+			</div>
+		</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">{{ snmptt_def.format }}</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">{{ snmptt_def.description|linebreaksbr }}</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">{{ snmptt_def.date_added }}</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">
+			{% if snmptt_def.action_name != None %}
+				<a href=javascript:toggleDiv('{{ snmptt_def }}_{{ snmptt_def.action_name|slugify }}')>{{ snmptt_def.action_name }}</a>
+				<div style="display:none" id="{{ snmptt_def }}_{{ snmptt_def.action_name|slugify }}">
+					<br />
+					<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||action_name&search_type={{ args.search_type }}|||eq&query={{ args.query }}|||{{ snmptt_def.action_name }}">Add to search</a></b><br />	
+					<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column={{ args.search_column }}|||action_name&search_type={{ args.search_type }}|||neq&query={{ args.query }}|||{{ snmptt_def.action_name }}">Remove from search</a></b><br />
+					<b><a href="?oid_to_prop={{ prop_settings.oid }}&pagesize={{ args.pagesize }}&search_column=|||action_name&search_type=|||eq&query=|||{{ snmptt_def.action_name }}">Search</a></b><br />
+				</div>
+			{% endif %}
+		</td>
+		<td class="status{% cycle 'Odd' 'Even' %}">
+		{% for argument in snmptt_def.argument_set.all %}
+			{{ argument.argument_nr }}. {{ argument.argument }}<br />
+		{% endfor %}
+		</td>
+		
+	</tr>
+
+	{% endfor %}
+	</table>
+	</div>
+
+	<h2>Select the settings you want to propagate:</h2>
+	<form name="modify_lines" action="{% url traps.views.snmptt_def_propagate_commit %}" method="POST">
+	<div id="propagate_settings">
+		<table>
+			<tr>
+			<th>Action</th>
+			<th>Arguments</th>
+			</tr>
+			<tr>
+			<td>{{ prop_settings.action_name }}</td>
+			<td>
+			{% for arg in prop_arguments %}
+				<input type="checkbox" name="arg_nrs_to_prop" value="{{ arg.argument_nr }}"> {{ arg.argument_nr }}. {{ arg.argument }}<br />
+			{% endfor %}
+			</td>
+		</table>
+	</div>
+		
+	<h2>Are you sure you want to propagate to these objects?</h2>
+	<input type="hidden" name="action_to_prop" value="{{ prop_settings.action_name }}">
+	<input type="hidden" name="oid_to_prop" value="{{ prop_settings.oid }}">
+	<input type="submit" value="Yes!">
+
+	</form>
+	</div>
+{% endblock %}
