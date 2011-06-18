@@ -40,5 +40,6 @@ class writeSnmpttConf:
 				snmptt_def_fh.write('EXEC ' + str(MSettings.action_dir) + '/' + str(commandline) + '\n')
 			snmptt_def_fh.write('FORMAT ' + str(snmptt_def.format) + '\n')
 			snmptt_def_fh.write('SDESC\n' + str(snmptt_def.description) + '\nEDESC\n')
-			
+		
+		snaketrap_info = SnakeTrapInfo.objects.filter(key='unsaved_changes').delete()	
 						

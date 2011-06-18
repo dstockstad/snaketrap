@@ -25,15 +25,17 @@ admin.autodiscover()
 # Piston
 from piston.resource import Resource
 from piston.authentication import HttpBasicAuthentication
-from traps.handlers import SnaketrapHandler
+from traps.api import SnaketrapApi
 
 auth = HttpBasicAuthentication(realm="SnakeTrap")
 ad = { 'authentication': auth }
 
-api_resource = Resource(handler=SnaketrapHandler, **ad)
+api_resource = Resource(handler=SnaketrapApi, **ad)
 
 urlpatterns = patterns('',
     (r'^$', 'traps.views.trap_listing'),
+    (r'^api/(?P<requested_info>.*)/(?P<search_column>.*)/(?P<search_type>.*)/(?P<query>.*)/$', api_resource),
+    (r'^api/(?P<requested_info>.*)/$', api_resource),
     (r'^api/$', api_resource), 
     (r'^traps/$', 'traps.views.trap_listing'),
     (r'^remove_traps/$', 'traps.views.trap_remove'),
@@ -43,6 +45,8 @@ urlpatterns = patterns('',
     (r'^snmptt_def_commit/$', 'traps.views.snmptt_def_commit'),
     (r'^snmptt_def_mass_change$', 'traps.views.snmptt_def_mass_change'),
     (r'^snmptt_def_mass_change_commit$', 'traps.views.snmptt_def_mass_change_commit'),
+    (r'^snmptt_def_propagate$', 'traps.views.snmptt_def_propagate'),
+    (r'^snmptt_def_propagate_commit$', 'traps.views.snmptt_def_propagate_commit'),
     (r'^mibs/$', 'traps.views.mib_listing'),
     (r'^mibs/upload$', 'traps.views.upload_file'),
     (r'^about/$', 'traps.views.about'),

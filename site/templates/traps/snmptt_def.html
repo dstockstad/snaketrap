@@ -10,10 +10,16 @@
 		<table>
 			<tr>
 				<td class="left">
+					{% if unsaved_changes == 'True' %}
+						<div id="unsaved_changes">
+					{% else %}
+						<div id="saved_changes">
+					{% endif %}
 					<a href="../snmptt_def_commit"><img src="{{ MEDIA_URL }}/images/save.png" /></a>
+					</div>
 				</td>
 				<td class="right">
-					<b>Results/page: </b>
+					Results/page:
 					<b><a href="?pagesize=5&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">5</a>
 					<a href="?pagesize=10&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">10</a>
 					<a href="?pagesize=20&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">20</a>
@@ -240,10 +246,15 @@
 		<form name="modify_lines" action="../snmptt_def_mass_change" method="POST">
 		{% for snmptt_def in snmptt_defs.object_list %}
 			<tr>
-			<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_oids" type="checkbox" value="{{ snmptt_def.oid }}"></td>
+			<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_oids" type="checkbox" value="{{ snmptt_def.oid }}" id="check_all"></td>
 			<td class="status{% cycle 'Odd' 'Even' %}">
 				{{ snmptt_def.oid }}
-				<a href="{% url admin:index %}/traps/snmptt_def/{{ snmptt_def.oid }}/"><img src="{{ MEDIA_URL }}/images/wrench.png" /></a>
+				<a href=javascript:toggleDiv('{{ snmptt_def }}')><img src="{{ MEDIA_URL }}/images/wrench.png" /></a>
+				<div style="display:none" id="{{ snmptt_def }}">
+					<br />
+					<b><a href="{% url traps.views.snmptt_def_propagate %}?oid_to_prop={{ snmptt_def.oid }}">Propagate settings</a></b><br />
+					<b><a href="{% url admin:index %}/traps/snmptt_def/{{ snmptt_def.oid }}">Modify</a></b><br />
+				</div>
 			</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">
 				<a href=javascript:toggleDiv('{{ snmptt_def }}_{{ snmptt_def.oid_name }}')>{{ snmptt_def.oid_name }}</a>
@@ -310,7 +321,7 @@
 			<table>
 			<td class="left">
 				{% if snmptt_defs.has_previous %}
-					<a href="?page={{ snmptt_defs.previous_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">previous</a>
+					<a href="?page={{ snmptt_defs.previous_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">Previous</a>
 				{% endif %}
 			</td>
 			<td class="middle">
@@ -318,7 +329,7 @@
 			</td>
 			<td class="right">
 				{% if snmptt_defs.has_next %}
-					<a href="?page={{ snmptt_defs.next_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">next</a>
+					<a href="?page={{ snmptt_defs.next_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">Next</a>
 				{% endif %}
 			</td>
 			</table>

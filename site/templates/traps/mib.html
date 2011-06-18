@@ -30,7 +30,7 @@
 		</tr>
 		{% for mib in mibs %}
 			<tr>
-			<td class="status{% cycle 'Odd' 'Even' %}"><input name="modify_line" type="checkbox" value="{{ mib }}"></td>
+			<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_objects" type="checkbox" value="{{ mib }}" id="check_all"></td>
 			<td class="status{% cycle 'Odd' 'Even' %}">{{ mib }}</td>
 			</tr>
 		{% endfor %}

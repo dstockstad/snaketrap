@@ -1,4 +1,6 @@
 #!/bin/bash
+# Author: Dag Stockstad
+#
 # Make sure you've configured the system mail before using this script
 #
 # Path to mail executable

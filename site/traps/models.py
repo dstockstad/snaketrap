@@ -19,10 +19,15 @@ from django.core.validators import RegexValidator, MinValueValidator, MinLengthV
 from django.db import models
 from django.contrib.auth.models import User
 from traps.models import *
+from django.db.models.signals import pre_save, pre_delete
+from django.dispatch import receiver
+
+
 
 PERMISSION_COLUMN_CHOICES = (
     ('severity', 'Severity'),
     ('hostname', 'Hostname'),
+    ('trapoid', 'OID'),
 )
 
 
@@ -64,7 +69,7 @@ class Unknown_trap(models.Model):
 
 class Action(models.Model):
 	action_name = models.CharField(max_length=512, primary_key=True, help_text="The human readable name of the action. Must be unique")
-	commandline = models.CharField(max_length=512, validators=[RegexValidator(r'^[-\w\$\.\ ]+$', message='This field can only contain upper/lowercase characters, spaces, numbers, dots, hyphens and dollar signs')], help_text="The command that will be executed plus argument definitions. $ARG1$ will be translated to the first argument in the SNMPTT definition")
+	commandline = models.CharField(max_length=512, validators=[RegexValidator(r'^[-\w\$\.\ ]+$', message='This field can only contain upper/lowercase characters, spaces, numbers, dots, hyphens and dollar signs')], help_text="The command that will be executed plus argument definitions. $ARG1$ will be translated to the first argument in the SNMPTT definition. Please know that the script must be placed in action_dir specified in settings.py")
 	help = models.CharField(max_length=512, null=True, blank=True, help_text="This help will be displayed on a few pages to help knowing what arguments this action needs")
 
 	def __unicode__(self):
@@ -94,7 +99,7 @@ class Snmptt_def(models.Model):
 	format = models.CharField(max_length=512)
 	description = models.TextField()
 	action_name = models.ForeignKey('Action', db_column='action_name', blank=True, null=True)
-	date_added = models.DateTimeField('Added', auto_now=True)
+	date_added = models.DateTimeField('Added', auto_now_add=True, null=True)
 
 	def __unicode__(self):
 		return(str(self.oid))
@@ -105,9 +110,26 @@ class Snmptt_def(models.Model):
 class RegexPermission(models.Model):
 	user = models.ForeignKey(User, help_text="The user for which the permission will apply")
 	column = models.CharField(max_length=128, choices=PERMISSION_COLUMN_CHOICES, help_text="The column in the view that the Regular Expression will apply to, for example Severity")
-	regex = models.CharField(max_length=512, help_text="Regular Expression, for example CRITICAL will match text containing that word")
+	regex = models.CharField(max_length=512, help_text="Regular Expression, for example CRITICAL will match that exact word. % will match any string, _ will match a single alpha-numeric or sign")
 
 	def __unicode__(self):
 		return self.regex
 	class Meta:
 		db_table = 'regex_permissions'
+
+class SnakeTrapInfo(models.Model):
+	key = models.CharField(max_length=128, primary_key=True)
+	value = models.CharField(max_length=512)
+
+	def __unicode__(self):
+		return self.key
+	class Meta:
+		db_table = 'snaketrap_info'
+
+@receiver(pre_save, sender=Snmptt_def)
+@receiver(pre_save, sender=Argument)
+@receiver(pre_delete, sender=Snmptt_def)
+@receiver(pre_delete, sender=Argument)
+def light_save(sender, **kwargs):
+	snaketrap_info = SnakeTrapInfo(key='unsaved_changes', value='True')
+	snaketrap_info.save()

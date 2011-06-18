@@ -1,12 +1,16 @@
 #!/usr/bin/env python
+#
+# You need to create and configure /etc/snaketrap2nagios.conf before you use this script. You should have received an example configuration with snaketrap in the actions dir.
+# You need to run this on the same machine as Nagios.
+#
 # -*- coding: utf-8 -*-
 
-"""sendTrapToNagios"""
+"""sendTrapToNagios.py"""
 
-__author__ = "Dag Stockstad, SLL IT"
+__author__ = "Dag Stockstad"
 __copyright__ = "GNU General Public License"
-__version__ = "0.1alpha1"
-__date__ = "$Date: 2010-05-19"
+__version__ = "0.2"
+__date__ = "$Date: 2011-05-05"
 
 # System requirements
 # Python (tested with 2.4)
@@ -16,7 +20,6 @@ import sys
 import re
 import syslog
 import ConfigParser
-import syslog
 import time
 
 if len(sys.argv) < 5:
@@ -48,19 +51,18 @@ trap_description = str(sys.argv[2])
 output = str(sys.argv[4])
 
 config = ConfigParser.RawConfigParser()
-config.read('/etc/trap2nagios.conf')
+config.read('/etc/snaketrap2nagios.conf')
 
 try:
 	nagios_pipe = config.get('general', 'nagios_pipe')
 except:
-	print('No pipe configured, exiting.')
+	syslog.syslog('No pipe configured, exiting.')
 	sys.exit(0)
 
 try:
 	host_mapping = config.get('mappings', str(fqdn))
 except:
 	host_mapping = None
-	print('No mapping found')
 
 if host_mapping != None:
 	fqdn = str(host_mapping)

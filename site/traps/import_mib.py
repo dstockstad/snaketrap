@@ -115,4 +115,3 @@ class ImportMib:
 					self.delete_oid_from_db()
 					self.commit_snmptt_def_to_db()
 				self.name, oid, self.event_type, self.severity, self.description, self.get_description, self.conf_script, self.script_db, self.conf_script_args = '','','','',[],0,'',None,None
-

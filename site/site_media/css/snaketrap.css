@@ -85,10 +85,12 @@ H1 {
 
 H2 {
 	font-weight: bold;
+	font-size: 10pt;
 }
 
 H3 {
 	font-size: 8pt;
+	font-weight: normal;
 }
 
 html {
@@ -139,13 +141,8 @@ html {
 	text-align: center;
 }
 
-#content P.license_info {
-	padding-left: 20px;
-	padding-bottom: 10px;
-}
-
 #menu {
-	margin-left: 170px;
+	margin-left: 150px;
 	font-weight: bold;
 	vertical-align: bottom;
 	margin-top: 0px;
@@ -343,6 +340,16 @@ html {
 	text-align: center;
 }
 
+#unsaved_changes IMG {
+	background-color: white;
+	padding: 8px;
+	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em 1em 1em 1em;
+}
+#saved_changes IMG {
+	background-color: yellow;
+}
+
 #defTable {
 	padding: 10px;
 	-moz-border-radius: 0em 0em 1em 1em;
@@ -384,7 +391,7 @@ html {
 }
 
 #mass_change_form_objects {
-	width: 250px;
+	width: 400px;
 	padding: 10px;
 	background-color: red;
 	-moz-border-radius: 1em 1em 1em 1em;
@@ -392,55 +399,81 @@ html {
 	font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-#mass_change_form_objects LI {
-	margin-left: 20px;
+#mass_change_form_objects TABLE {
+	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em 1em 1em 1em;
+	background-color: red;
+}
+
+#mass_change_form_objects TH {
+	text-align: left;
+	background-color: red;
 }
 
 #mass_change {
 	padding: 10px;
-;
 	-moz-border-radius: 1em 1em 1em 1em;
 	border-radius: 1em 1em 1em 1em;
 }
-
-#mass_change LI {
-	margin-left: 20px;
-}
-
 #mass_change TABLE {
 	font-size: 8pt;
-	background-color: #000000;
 	padding: 0px;
 	width: 100%;
 }
 
-#mass_change TH.checkbox_width {
-	text-align: left;
-	background-color: #000000;
-	width: 1%;
-	text-align: center;
-}
-
-#mass_change TH.message_width {
-	text-align: left;
-	background-color: #000000;
-	width: 35%;
-	border-radius: 0em 1em 0em 0em;
-	-moz-border-radius: 0em 0em 0em 0em;
-}
-
-#mass_change TH {
-	text-align: left;
-	background-color: #000000;
-	width: 10%;
-}
-
 #mass_change TD {
-	text-align: left;
-	background-color: #ffffff;
+	background-color: red;
 	padding: 0px;
+	text-align: left;
+}
+
+#mass_change LI {
+	margin-left: 20px;
+
+}
+
+#propagate {
+	padding: 10px;
+}
+
+#propagate_settings {
+	background-color: white;
+	width: 510px;
+	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em 1em 1em 1em;
+}
+
+#propagate_settings TABLE {
+	font-size: 8pt;
+	padding: 10px;
+	width: 510px;
+}
+
+#propagate_settings TH {
+	background-color: white;
+	-moz-border-radius: 1em 1em 1em 1em;
+}
+
+#propagate_settings TD {
+	background-color: white;
+	padding: 0px;
+	text-align: left;
+}
+
+#propagate_objects #selected_oids {
+	width: 600px;
+}
+
+#propagate_objects {
+	padding: 10px;
+	background-color: red;
+	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em 1em 1em 1em;
+	font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+	width: 600px;
 	text-align: center;
 }
+
 
 #mibTable {
 	padding: 10px;
@@ -522,35 +555,43 @@ html {
 	text-align: left;
 }
 
+#login_failure {
+	background-color: red;
+	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em 1em 1em 1em;
+	padding: 1px;
+	font-weight: bold;
+}
+
 #login_content {
-	padding: 2px;
-	background-color: #ffffff;
+	padding: 8px;
+	background-color: #ffff00;
 	-moz-border-radius: 1em 1em 1em 1em;
 	border-radius: 1em 1em 1em 1em;
 	width: 300px;
-	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100px;
 	border: 5px solid black;
+	text-align: center;
 }
 
 #login_content TABLE {
 	font-size: 8pt;
-	background-color: #ffffff;
 	padding: 2px;
 	border: 1;
 	width: 30%;
-	align: center;
+	text-align: center;
 }
 
 #login_content TH {
 	text-align: left;
-	background-color: #ffffff;
 	width: 97%;
 	padding: 5px;
 }
 
 #login_content TD {
 	text-align: left;
-	background-color: #ffffff;
 }
 
 #content .severityINFORMATIONAL {
@@ -709,3 +750,18 @@ html {
 	padding: 10px;
 }
 
+#license_info
+{
+	margin-left: 20px;
+}
+
+#snaketrap_info
+{
+	margin-top: 30px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+
+#snaketrap_info SPAN.snaketrap_version {
+	font-weight: bold;
+}

@@ -54,7 +54,7 @@ class SnakeTrapPermissions:
 				params_list = []
 				for regex in perms[str(perm)]:
 					string = str(string) + " OR " + str(perm) + " ILIKE %s"
-					params_list.append("%" + str(regex) + "%")
+					params_list.append(str(regex))
 				where_string = "(" + str(string[4:]) + ")"
 
 				list = list.extra(where=[where_string], params=params_list)

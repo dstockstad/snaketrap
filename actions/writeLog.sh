@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: Dag Stockstad
 # LOGDIR is not taken as an argument as a precaution if someone tries to write in files on the system. 
 LOGDIR=/var/log/snaketrap
 # Make sure this directory is writable for the user running snmptt

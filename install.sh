@@ -1,14 +1,20 @@
 #!/bin/bash
+function cExit()
+{
+	tput sgr0
+	exit 1
+}
+
 . install.cfg
 
 if [ "$UID" != 0 ]; then
 	echo "You must be root to run this installation script"
-	exit 1
+	cExit
 fi
 
-echo "PLEASE MAKE SURE YOU HAVE CREATED A DATABASE AND A USER TO ACCESS IT BEFORE RUNNING THIS SCRIPT!"
-echo "ALSO MAKE SURE YOU HAVE ALL REQUIREMENTS LISTED IN README!"
-echo "Press Enter to continue"
+echo -e "\033[33mPLEASE MAKE SURE YOU HAVE CREATED A DATABASE AND A USER TO ACCESS IT BEFORE RUNNING THIS SCRIPT!"
+echo -e "\033[33mALSO MAKE SURE YOU HAVE ALL REQUIREMENTS LISTED IN README!"
+echo -e "\033[33mPress Enter to continue"
 read key
 
 if [ -z $site_dir ] || [ -z $action_dir ] || [ -z $mib_dir ] || [ -z $tmp_dir ] || [ -z $apache_user ] || [ -z $apache_group ] || [ -z $snaketrap_apache_conf ]; then
@@ -48,25 +54,39 @@ else
 	echo "snmpttconvertmib = $snmpttconvertmib"
 	echo "output_snmptt_def = $output_snmptt_def"
 	echo "Edit install.cfg to change defaults."
-fi		
+fi
+
+echo ""
+echo ""
 
 if [ ! -x "$snmpttconvertmib" ]; then
 	echo "$snmpttconvertmib doesn't exist or is not executable"
-	exit 1
+	cExit
 fi
 
-# Run some tests to get python version and check if Django and psycopg2 is installed
+if [ `grep -c "^$apache_user\:" /etc/passwd` -eq 0 ]; then
+	echo -e "\033[31mapache_user: $apache_user doesn't exist. Please set it correctly in install.cfg"
+	cExit
+fi
+
+if [ `grep -c "^$apache_group\:" /etc/group` -eq 0 ]; then
+	echo -e "\033[31mapache_group: $apache_group doesn't exist. Please set it to correctly in install.cfg"
+	cExit
+fi
+
+
+# Run some tests to check if Django and psycopg2 is installed
 ./tests.py
 if [ "$?" -ne 0 ]; then
-	echo "You have failed to meet the python requirements, exiting..."
-	exit 1
+	echo -e "\033[31mYou have failed to meet the python requirements, exiting..."
+	cExit
 fi
 
 printf "Do you want to perform an installation with these settings? [y/N] "
 read input
 if [ "e$input" != "ey" ]; then
-	echo "Exiting..."
-	exit 1
+	echo -e "\033[31mExiting..."
+	cExit
 fi
 
 DATE=`date +"%Y-%m-%d_%H%M%S"`
@@ -197,7 +217,7 @@ DATABASES = {
         'USER': '$db_user',                      # Not used with sqlite3.
         'PASSWORD': '$db_pass',                  # Not used with sqlite3.
         'HOST': '$db_hostname',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'PORT': '$db_port',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -222,14 +242,16 @@ application = WSGIHandler()
 EOF
 
 cat <<- EOF > conf/snaketrap.conf
-LoadModule wsgi_module modules/mod_wsgi.so
-
 Alias $url_prefix/site_media/ $site_dir/site_media/
 Alias $url_prefix/media $site_dir/admin_media/
 
 <Directory $site_dir/site_media>
 Order deny,allow
 Allow from all
+</Directory>
+
+<Directory $site_dir>
+	WSGIPassAuthorization On
 </Directory>
 
 WSGIScriptAlias $wsgi_url_prefix $site_dir/apache/traps.wsgi
@@ -284,27 +306,25 @@ if [ ! -f "$output_snmptt_def" ]; then
 	chown $apache_user:$apache_group "$output_snmptt_def"
 fi
 
-printf "Wrote settings. It is recommended to install settings unless you're familiar with django and want to do everything yourself.\n"
-printf "Do you want to install settings? [Y/n] "
-read input
-
-if [ "e$input" == "ey" ] || [ "e$input" == "e" ]; then
-	mv -f conf/settings.py `dirname $site_dir`/`basename $site_dir`/settings.py
-	mv -f conf/urls.py `dirname $site_dir`/`basename $site_dir`/urls.py
-	mv -f conf/traps.wsgi `dirname $site_dir`/`basename $site_dir`/apache/traps.wsgi
-	if [ ! -d `dirname $snaketrap_apache_conf` ]; then
-		mkdir -p `dirname $snaketrap_apache_conf`
-	fi
-	if [ -f $snaketrap_apache_conf ]; then
-		echo "[ snaketrap_apache_conf ] $snaketrap_apache_conf already exists, backing up to "$snaketrap_apache_conf"_`date +"%Y-%m-%d_%H%M%S"`."
-		mv $snaketrap_apache_conf "$snaketrap_apache_conf"_`date +"%Y-%m-%d_%H%M%S"`
-	fi
+mv -f conf/settings.py `dirname $site_dir`/`basename $site_dir`/settings.py
+mv -f conf/urls.py `dirname $site_dir`/`basename $site_dir`/urls.py
+mv -f conf/traps.wsgi `dirname $site_dir`/`basename $site_dir`/apache/traps.wsgi
+if [ ! -d `dirname $snaketrap_apache_conf` ]; then
+	mkdir -p `dirname $snaketrap_apache_conf`
+fi
+if [ ! -e $snaketrap_apache_conf ]; then
 	mv -f conf/snaketrap.conf $snaketrap_apache_conf
 else
-	printf "You need to edit/create the following files:\n$site_dir/urls.py\n$site_dir/settings.py\n$snaketrap_apache_conf\n"
-	printf "Then you need to do:\ncd $site_dir\npython manage.py syncdb\n"
-	echo "Installation Complete!!!"
-	exit 0
+	echo "$snaketrap_apache_conf already exists. Will not write apache configuration"
+	echo "Sample configuration is in conf/snaketrap.conf if you need it."
+fi
+
+if [ -f /etc/snaketrap2nagios.conf ]; then
+	echo "snaketrap2nagios.conf already exists in /etc. Will not write example configuration"
+else
+	echo "Writing example configuration for snaketrap2nagios to /etc/snaketrap2nagios.conf"
+	echo "Be sure to edit it before you use the Send Trap to Nagios action"
+	cp -p conf/snaketrap2nagios.conf /etc/snaketrap2nagios.conf
 fi
 
 printf "Installed settings. Do you want to copy mibs from $net_snmp_mib_dir to $mib_dir? [Y/n] "
@@ -313,24 +333,35 @@ if [ "e$input" == "e" ] || [ "e$input" == "ey" ]; then
 	cp -p "$net_snmp_mib_dir"/* "$mib_dir"
 fi
 
-printf "Copied mibs. It is recommended to install the database unless you already have a database.\n"
-printf "Do you want to install the database? [y/N] "
+printf "Copied mibs. It is recommended to install the database unless you already have a database (and even then it doesn't hurt).\n"
+printf "Do you want to install the database? [Y/n] "
 read input
 
 mv -f conf/install.post.py `dirname $site_dir`/`basename $site_dir`/install.post.py
+cp -pf upgrade_snaketrapdb.py `dirname $site_dir`/`basename $site_dir`/upgrade_snaketrapdb.py
 
-if [ "e$input" == "ey" ]; then
+if [ "e$input" == "ey" ] || [ "e$input" == "e" ]; then
 	echo "Trying to create database tables."
 	cd $site_dir
 	python manage.py syncdb
 	if [ "$?" -ne 0 ]; then
-		echo "Something went wrong when creating database tables, results where logged to $site_dir/install.log."
-		echo "Installation completed with errors"
-		exit 1
+		echo "Something went wrong when creating database tables."
+		printf "You need to fix whatever is wrong with the database and reissue the folowing commands\ncd  $site_dir\npython manage.py syncdb\n"
+	else
+		echo "Created database."
 	fi
-	echo "Created database."
 else
 	echo "Not creating a database"
+fi
+
+echo "Upgrading database"
+./upgrade_snaketrapdb.py $db_dbname $db_hostname $db_port $db_user $db_pass
+if [ "$?" -ne 0 ]; then
+	echo "Failed to upgrade database. Please connect to the database and execute the following SQL manually:"
+	echo "ALTER TABLE snmptt_def ALTER COLUMN date_added DROP NOT NULL;"
+	echo "INSERT INTO snaketrap_info (key, value) VALUES('version', '0.1.2');"
+else
+	echo "Succeeded upgrading database"
 fi
 
 printf "Do you want to add the included scripts to the database so that you may use them? [Y/n] "
@@ -339,10 +370,14 @@ if [ "e$input" == "e" ] || [ "e$input" == "ey" ]; then
 	cd $site_dir
 	python ./install.post.py
 	if [ "$?" -ne 0 ]; then
-		echo "Something went wrong when adding the scripts. You may need to add them manually."
+		echo "Something went wrong when adding the scripts. You may want to add them manually by running the following commands:"
+		echo "cd $site_dir"
+		echo "python install.post.py"
 	fi
 fi
 
 echo "Installation Completed!!!"
 echo "Now restart apache and point your browser to http://`hostname`$url_prefix to start using this kick-ass system ;)"
-echo "Don't forget that if this is your first time installing this system you need to go to the mibs tab and do a "readd" in order to be able to configure actions for them."
+echo "Don't forget that if this is your first time installing this system you need to go to the mibs tab and do a \"readd\" in order to be able to configure actions for them."
+
+tput sgr0

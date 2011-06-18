@@ -52,6 +52,11 @@ class CustomSearch:
 			syslog.syslog(str(s_q))
 
 			for s_col, s_type, q in map(None, s_s_col, s_s_type, s_q):
+				if str(s_type) not in sql_search_type:
+					CErr = CustomError()
+					CErr.object = 'Search Error'
+					CErr.custom_error_type = 'Valid search types are: ' + ",".join(sql_search_type.keys())
+					return render_to_response('traps/error.html', {"custom_errors": CErr})
 				# Add % around query if LIKE or NOT LIKE is specified as an argument
 				if s_type == 'like' or s_type == 'nlike':
 					query_padding = '%'

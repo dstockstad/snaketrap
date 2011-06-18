@@ -1,3 +1,4 @@
+
 """
 This file is part of SnakeTrap.
 
@@ -20,8 +21,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from traps.models import *
+from traps.signals import *
 from django.shortcuts import render_to_response
 from django.template import Context, loader, RequestContext
 from django import forms
@@ -29,12 +30,7 @@ from django.core.context_processors import csrf
 from django.conf import settings
 from django.core.validators import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-
 from django.template.defaultfilters import stringfilter
-
-# Memcache
-# from django.views.decorators.cache import cache_page
-# from django.core.cache import cache
 
 # Custom classes
 from traps.validation import *
@@ -45,6 +41,8 @@ from traps.write_snmptt_conf import *
 from traps.custom_settings import *
 from traps.custom_permissions import *
 from traps.custom_search import *
+from traps.pagination import * 
+from traps.helpers import *
 
 # Non django modules
 from string import replace
@@ -53,7 +51,6 @@ import sys
 import subprocess
 import shlex
 import datetime
-import syslog 
 import time
 
 # Login
@@ -84,57 +81,11 @@ class Arguments:
 		self.order = ''
 		self.pagesize = 0
 
-# Helper functions for views
-def deleteFiles(filelist, directory):
-	output = []
-	for file in filelist:
-		os.remove(str(directory) + '/' + str(file))
-
-def check_dirs(dirs, request):
-	CErr = CustomError()
-	for dir in dirs:
-		if os.path.isdir(dir) == False:
-			CErr.object = 'Directory Error'
-			CErr.custom_error_type = dir + " doesn't exist"
-			return CErr
-	return(None)
-
-def f_paginator(request, list, pagesize, page):
-	# Split up query into pages
-	paginator = Paginator(list, int(pagesize))
-
-	# If page request (9999) is out of range, deliver last page of results.
-	try:
-		traps = paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		traps = paginator.page(paginator.num_pages)
-	return(traps)
-
-
-def list_dates(start_year=2011, start_month=1, start_day=1, last_year=2011, last_month=2, last_day=26):
-	date_list = []
-
-	begin_year = datetime.date(start_year, start_month, start_day)
-	end_year = datetime.date(last_year, last_month, last_day)
-	one_day = datetime.timedelta(days=1)
-
-	next_day = begin_year
-	if start_year == last_year:
-		last_year = last_year + 1
-
-	for year in range(start_year, last_year):
-		for day in range(0, 366):  # includes potential leap year
-			if next_day > end_year:
-				break
-			date_list.append("".join(next_day.isoformat().split("-")))
-			next_day += one_day
-
-	return(date_list)
-
 # Views
 @login_required
 def about(request):
-	return render_to_response('traps/about.html', {}, context_instance=RequestContext(request))
+	snaketrap_version = SnakeTrapInfo.objects.get(pk='version')
+	return render_to_response('traps/about.html', {'snaketrap_version': snaketrap_version}, context_instance=RequestContext(request))
 
 @login_required
 def upload_file(request):
@@ -201,9 +152,9 @@ def trap_listing(request):
 	except:
 		args.pagesize = 20
 	try:
-		page = int(request.GET.get('page', 1))
+		args.page = int(request.GET.get('page', 1))
 	except:
-		page = 1
+		args.page = 1
 
 	if args.pagesize > 3000:
 		CErr = CustomError()
@@ -233,7 +184,7 @@ def trap_listing(request):
 	date_list = list_dates(first_trap_year, first_trap_month, first_trap_day, last_trap_year, last_trap_month, last_trap_day)
 
 	# Apply pagination
-	traps = f_paginator(request, trap_list, args.pagesize, page)
+	traps = f_paginator(request, trap_list, args)
 
 	# Send result to template
 	return render_to_response('traps/trap.html', {"traps": traps, "args": args, "permissions": perms, "dates": date_list, "jquery": "True", "jquery_slider": "True" }, context_instance=RequestContext(request))
@@ -247,9 +198,7 @@ def trap_remove(request):
 		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
 
 	objects = request.POST.getlist('selected_objects')
-	for object in objects:
-		b = Trap.objects.get(pk=str(object))
-		b.delete()
+	Trap.objects.filter(pk__in=objects).delete()
 
 	return HttpResponseRedirect(settings.URL_PREFIX + "/traps")
 
@@ -295,9 +244,9 @@ def unknown_trap_listing(request):
 	except:
 		args.pagesize = 20
 	try:
-		page = int(request.GET.get('page', 1))
+		args.page = int(request.GET.get('page', 1))
 	except:
-		page = 1
+		args.page = 1
 
 	if args.pagesize > 3000:
 		CErr = CustomError()
@@ -325,7 +274,7 @@ def unknown_trap_listing(request):
 
 
 	# Apply pagination
-	unknown_traps = f_paginator(request, unknown_trap_list, args.pagesize, page)
+	unknown_traps = f_paginator(request, unknown_trap_list, args)
 
 	# Send result to template
 	return render_to_response('traps/unknown_trap.html', {"unknown_traps": unknown_traps, "args": args, "dates": date_list, "jquery": "True", "jquery_slider": "True" }, context_instance=RequestContext(request))
@@ -339,9 +288,8 @@ def unknown_trap_remove(request):
 		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
 
 	objects = request.POST.getlist('selected_objects')
-	for object in objects:
-		b = Unknown_trap.objects.get(pk=str(object))
-		b.delete()
+
+	Unknown_trap.objects.filter(pk__in=objects).delete()
 
 	return HttpResponseRedirect(settings.URL_PREFIX + "/unknown_traps")
 
@@ -382,9 +330,9 @@ def snmptt_def_listing(request):
 	except:
 		args.pagesize = 10
 	try:
-		page = int(request.GET.get('page', 1))
+		args.page = int(request.GET.get('page', 1))
 	except:
-		page = 1
+		args.page = 1
 
 	if args.pagesize > 3000:
 		CErr = CustomError()
@@ -394,7 +342,7 @@ def snmptt_def_listing(request):
 	# Get all objects and order by args.order
 	snmptt_def_list = Snmptt_def.objects.select_related().all().order_by(str(args.order))
 	snmptt_def_list = Search.f_search(snmptt_def_list, args)
-	snmptt_defs = f_paginator(request, snmptt_def_list, args.pagesize, page)
+	snmptt_defs = f_paginator(request, snmptt_def_list, args)
 
 
 	# Get time of first and last result
@@ -410,8 +358,15 @@ def snmptt_def_listing(request):
 	# Get dates for date slider
 	date_list = list_dates(first_trap_year, first_trap_month, first_trap_day, last_trap_year, last_trap_month, last_trap_day)
 
+	# Check if there are any unsaved changes
+	snaketrap_info = SnakeTrapInfo.objects.filter(key='unsaved_changes')
+	if snaketrap_info.count() > 0:
+		unsaved_changes = "True"
+	else:
+		unsaved_changes = "False"
+
 	# Send result to template
-	return render_to_response('traps/snmptt_def.html', {"snmptt_defs": snmptt_defs, "args": args, "dates": date_list, "jquery": "True", "jquery_slider": "True" }, context_instance=RequestContext(request))
+	return render_to_response('traps/snmptt_def.html', {"unsaved_changes": unsaved_changes, "snmptt_defs": snmptt_defs, "args": args, "dates": date_list, "jquery": "True", "jquery_slider": "True"}, context_instance=RequestContext(request))
 
 @login_required
 def snmptt_def_commit(request):
@@ -447,19 +402,23 @@ def snmptt_def_mass_change(request):
 		CErr.object = 'Selection Error'
 		CErr.custom_error_type = 'You didn\'t specify what to do'
 		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
 	if action == 'change_argument':
 		form = ChangeArgumentForm(request.POST)
-		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'change_argument', "title": 'Change Argument', "form": form, "selected_objects": request.POST.getlist('selected_oids'), "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
+		object_list = Snmptt_def.objects.select_related().filter(oid__in=request.POST.getlist('selected_oids'))
+		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'change_argument', "title": 'Change Argument', "form": form, "selected_objects": object_list, "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
 	if action == 'delete_argument':
 		form = DeleteArgumentForm(request.POST)
-		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'delete_argument', "title": 'Delete Argument', "form": form, "selected_objects": request.POST.getlist('selected_oids'), "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
+		object_list = Snmptt_def.objects.select_related().filter(oid__in=request.POST.getlist('selected_oids'))
+		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'delete_argument', "title": 'Delete Argument', "form": form, "selected_objects": object_list, "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
 	if action == 'change_action':
 		form = ChangeActionForm(request.POST)
-		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'change_action', "title": 'Change Action', "form": form, "selected_objects": request.POST.getlist('selected_oids'), "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
+		object_list = Snmptt_def.objects.select_related().filter(oid__in=request.POST.getlist('selected_oids'))
+		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'change_action', "title": 'Change Action', "form": form, "selected_objects": object_list, "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
 	if action == 'delete_action':
 		form = ''
-		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'delete_action', "title": 'Delete Action and Arguments', "form": form, "selected_objects": request.POST.getlist('selected_oids'), "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
-
+		object_list = Snmptt_def.objects.select_related().filter(oid__in=request.POST.getlist('selected_oids'))
+		return render_to_response('traps/snmptt_def_mass_change.html', {"action": 'delete_action', "title": 'Delete Action and Arguments', "form": form, "selected_objects": object_list, "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
 @login_required
 def snmptt_def_mass_change_commit(request):
 	CErr = CustomError()
@@ -542,6 +501,127 @@ def snmptt_def_mass_change_commit(request):
 
 	return render_to_response('traps/snmptt_def_mass_change_commit.html', {"oids": oids, "output": output, "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
 	
+@login_required
+def snmptt_def_propagate(request):
+	CErr = CustomError()
+	Search = CustomSearch()
+	if request.user.is_staff == False:
+		CErr.object = 'Permission Error'
+		CErr.custom_error_type = 'You must be staff to view this page'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
+	oid_to_prop = request.GET.get('oid_to_prop','')
+
+	if len(oid_to_prop) == 0:
+		CErr.object = 'Selection Error'
+		CErr.custom_error_type = 'No object selected'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
+	# Get all arguments
+	args = Arguments()
+	args.search_column = str(request.GET.get('search_column', ''))
+	args.search_type = str(request.GET.get('search_type', ''))
+	args.query = request.GET.getlist('query')
+	if len(args.query) == len(args.search_type.split("|||")):
+		args.query = "|||".join(args.query)
+	else:
+		if len(args.query) > 0:
+			fquery = ''
+			for query in args.query:
+				if fquery != '':
+					fquery = fquery + "|||" + str(query)
+				else:
+					fquery = str(query)
+			args.query = fquery
+		else:
+			args.query = ''
+
+	args.order = str(request.GET.get('order', 'oid_name'))
+
+	# These require try statements since they are integer (would otherwise crash if string was inserted)
+	try:
+		args.pagesize = int(request.GET.get('pagesize', 10))
+	except:
+		args.pagesize = 10
+	try:
+		args.page = int(request.GET.get('page', 1))
+	except:
+		args.page = 1
+
+	if args.pagesize > 3000:
+		CErr = CustomError()
+		CErr.object, CErr.custom_error_type = 'Screwing Around Error', 'Stop messing with my system or suffer my wrath!!!'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
+	# Get all objects and order by args.order
+	object_list = Snmptt_def.objects.select_related().exclude(oid=oid_to_prop).order_by(str(args.order))
+	objects = Search.f_search(object_list, args)
+	
+	prop_arguments = Argument.objects.filter(oid=oid_to_prop)
+	try:
+		prop_settings = Snmptt_def.objects.get(oid=oid_to_prop)
+	except:
+		CErr.object = 'OID Error'
+		CErr.custom_error_type = 'The OID you selected to propagate from doesn\'t exist'		
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+		
+	# Get time of first and last result
+	try:
+		first_trap = Snmptt_def.objects.all().order_by('date_added')[0]
+		last_trap = Snmptt_def.objects.all().order_by('-date_added')[0]
+		first_trap_year, first_trap_month, first_trap_day = first_trap.date_added.year, first_trap.date_added.month, first_trap.date_added.day
+		last_trap_year, last_trap_month, last_trap_day = last_trap.date_added.year, last_trap.date_added.month, last_trap.date_added.day
+	except:
+		first_trap_year, first_trap_month, first_trap_day = datetime.datetime.now().year - 1, datetime.datetime.now().month, datetime.datetime.now().day
+		last_trap_year, last_trap_month, last_trap_day = datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day
+
+	# Get dates for date slider
+	date_list = list_dates(first_trap_year, first_trap_month, first_trap_day, last_trap_year, last_trap_month, last_trap_day)
+
+	return render_to_response('traps/snmptt_def_propagate.html', {"args": args, "dates": date_list, "prop_arguments": prop_arguments, "prop_settings": prop_settings, "title": 'Propagate', "available_objects": objects, "jquery": "True", "jquery_slider": "True" }, context_instance=RequestContext(request))
+
+@login_required
+def snmptt_def_propagate_commit(request):
+	CErr = CustomError()
+	if request.user.is_staff == False:
+		CErr.object = 'Permission Error'
+		CErr.custom_error_type = 'You must be staff to view this page'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+		
+	selected_oids = request.POST.getlist('selected_oids')
+	if len(selected_oids) == 0:
+		CErr.object = 'Selection Error'
+		CErr.custom_error_type = 'You didn\'t select any objects to propagate to'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
+	arg_nrs_to_prop = request.POST.getlist('arg_nrs_to_prop')
+	oid_to_prop = request.POST.get('oid_to_prop', '')
+	arg_nrs_to_prop.sort()
+	d = Snmptt_def.objects.get(pk=str(oid_to_prop))
+	action_to_prop = d.action_name
+
+	try:
+		c = Action.objects.get(pk=action_to_prop)
+	except:
+		CErr.object = 'Validation Error'
+		CErr.custom_error_type = 'Invalid action, please select another object to propagate from.'
+		return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
+
+	for oid in selected_oids:
+		a = Snmptt_def.objects.get(oid=str(oid))
+		for arg_nr in arg_nrs_to_prop:
+			arg = Argument.objects.get(oid=d, argument_nr=arg_nr)
+			try:
+				b = Argument.objects.get(oid=a, argument_nr=arg_nr)
+				b.argument = str(arg.argument)
+			except:
+				b = Argument(oid=a, argument_nr=arg_nr, argument=str(arg.argument))
+			b.save()
+		a.action_name = c
+		a.save()
+
+	return render_to_response('traps/snmptt_def_propagate_commit.html', {"title": 'Propagate', "oids": selected_oids, "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
+			
 
 @login_required
 def mib_listing(request):
@@ -563,27 +643,27 @@ def mib_listing(request):
 
 
 	# Check if POST is set and contains modify_line and action
-	modify_lines = request.POST.getlist('modify_line')
+	selected_objects = request.POST.getlist('selected_objects')
 	action = request.POST.get('action','')
-	if (action == 'delete' or action == 'delete_and_remove_oids') and len(modify_lines) > 0:
-		# Run validation on action and modify_lines (allow chars, nums, dots and hyphens)
+	if (action == 'delete' or action == 'delete_and_remove_oids') and len(selected_objects) > 0:
+		# Run validation on action and selected_objects (allow chars, nums, dots and hyphens)
 		CErr = CVal.validateArg([str(action)])
 		if CErr != None:
 			return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
-		CErr = CVal.validateArg(modify_lines)
+		CErr = CVal.validateArg(selected_objects)
 		if CErr != None:
 			return render_to_response('traps/error.html', {"custom_errors": CErr}, context_instance=RequestContext(request))
 
 		# If you've gotten this far, validation has succeeded
 		# Delete files in snmp_mib_dir
-		deleteFiles(modify_lines, str(SSettings.snmp_mib_dir))
-	if action == 'readd' and len(modify_lines) > 0:
-		for line in modify_lines:
+		deleteFiles(selected_objects, str(SSettings.snmp_mib_dir))
+	if action == 'readd' and len(selected_objects) > 0:
+		for line in selected_objects:
 			IMib = ImportMib(SSettings, 'readd', str(line))
 			IMib.convert_mib()
 			IMib.parse_snmptt_file()
-	if action == 'delete_and_remove_oids' and len(modify_lines) > 0:
-		for line in modify_lines:
+	if action == 'delete_and_remove_oids' and len(selected_objects) > 0:
+		for line in selected_objects:
 			IMib = ImportMib(SSettings, 'delete', str(line))
 			IMib.parse_snmptt_file()
 	form = upload_file(request)
@@ -592,3 +672,4 @@ def mib_listing(request):
 	mibs = os.listdir(SSettings.snmp_mib_dir)
 	mibs.sort()
 	return render_to_response('traps/mib.html', {"mibs": mibs, "args": args, "form": form.as_p(), "jquery": False, "jquery_slider": False }, context_instance=RequestContext(request))
+

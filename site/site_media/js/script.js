@@ -3,7 +3,7 @@ function CheckAll(element)
 	inputs = document.getElementsByTagName('input');
 	for (i = 0; i < inputs.length; i++)
 	{
-		if (inputs[i].type=='checkbox')
+		if (inputs[i].type=='checkbox' && inputs[i].id=='check_all')
 		{
 			if (element.checked==true) 
 			{

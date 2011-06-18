@@ -207,7 +207,7 @@
 		{% for trap in traps.object_list %}
 			<tr>
 			{% if user.is_staff %}
-				<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_objects" type="checkbox" value="{{ trap }}"></td>
+				<td class="status{% cycle 'Odd' 'Even' %}"><input name="selected_objects" type="checkbox" value="{{ trap }}" id="check_all"></td>
 			{% endif %}
 			<td class="status{% cycle 'Odd' 'Even' %}">{{ trap.traptime }}</td>
 			<td class="status{% cycle 'Odd' 'Even' %}">
@@ -263,7 +263,7 @@
 			<table>
 			<td class="left">
 				{% if traps.has_previous %}
-					<a href="?page={{ traps.previous_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">previous</a>
+					<a href="?page={{ traps.previous_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">Previous</a>
 				{% endif %}
 			</td>
 			<td class="middle">
@@ -271,7 +271,7 @@
 			</td>
 			<td class="right">
 				{% if traps.has_next %}
-					<a href="?page={{ traps.next_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">next</a>
+					<a href="?page={{ traps.next_page_number }}&pagesize={{ args.pagesize }}&order={{ args.order }}&search_column={{ args.search_column }}&search_type={{ args.search_type }}&query={{ args.query }}">Next</a>
 				{% endif %}
 			</td>
 			</table>

@@ -13,10 +13,21 @@
 			<input type="hidden" name="index" value="0">
 			<input type="hidden" name="action" value="{{ action }}">
 			<div id="mass_change_form_objects">
+			<table>
+			<tr>
+			<th>OID</th>
+			<th>Action</th>
+			<th>Help</th>
+			</tr>
 			{% for selected in selected_objects %}
-				<input type="hidden" name="selected_oids" value="{{ selected }}">
-				<li>{{ selected }}</li>
+				<tr>
+				<input type="hidden" name="selected_oids" value="{{ selected.oid }}">
+				<td>{{ selected.oid }}</td>
+				<td>{{ selected.action_name }}</td>
+				<td>{{ selected.action_name.help }}</td>
+				</tr>
 			{% endfor %}
+			</table>
 			</div>
 			{% csrf_token %}
 			<br />{{ form.as_p }}<br />
